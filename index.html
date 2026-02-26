@@ -2,66 +2,115 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>С 8 Марта ❤️</title>
+<title>С 8 Марта 🌸</title>
 <style>
+/* Общие стили */
 body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #1a1a1a; /* тёмный фон */
-    color: #ffe6f0; /* нежно-розовый текст */
-    text-align: center;
-    overflow-x: hidden;
+  margin: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #111; /* темный фон */
+  color: #fff;
+  overflow-x: hidden;
 }
+
 .container {
-    padding: 50px 20px;
+  text-align: center;
+  padding: 80px 20px;
 }
+
+/* Заголовок с плавным появлением */
 h1 {
-    font-size: 48px;
-    margin-bottom: 20px;
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #ffb6c1;
+  opacity: 0;
+  animation: fadeIn 1.5s forwards 0.5s;
 }
+
+/* Текст поздравления */
 p {
-    font-size: 22px;
-    max-width: 600px;
-    margin: 20px auto;
-    line-height: 1.6;
+  font-size: 20px;
+  max-width: 600px;
+  margin: 20px auto;
+  line-height: 1.6;
+  opacity: 0;
+  animation: fadeIn 1.5s forwards 1.5s;
 }
+
+/* Картинки роз с плавным движением */
 img.rose {
-    width: 80px;
-    margin: 10px;
-    animation: float 6s ease-in-out infinite;
+  width: 60px;
+  margin: 10px;
+  animation: float 6s ease-in-out infinite;
+  opacity: 0;
+  animation: float 6s ease-in-out infinite, fadeIn 1.5s forwards 2s;
 }
+
+/* Плавное появление */
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* Плавное "парение" роз */
 @keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-20px); }
-    100% { transform: translateY(0px); }
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
 }
+
+/* Музыка */
 audio {
-    margin-top: 30px;
+  margin-top: 30px;
+  outline: none;
 }
+
+/* Плавная кнопка */
+button {
+  margin-top: 40px;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(45deg, #ff7eb3, #ffb6c1);
+  color: #111;
+  font-size: 18px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(255,182,193,0.4);
+}
+
 </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>С 8 Марта, моя прекрасная 🌸</h1>
+  <h1>С 8 Марта, моя прекрасная 🌸</h1>
 
-    <p>
-        Пусть этот день подарит тебе море улыбок и счастья.  
-        Ты — самое светлое, что есть в моей жизни. ❤️
-    </p>
+  <p>
+    Пусть этот день подарит тебе море улыбок и счастья.<br>
+    Ты — самое светлое, что есть в моей жизни. ❤️
+  </p>
 
-    <!-- Розочки -->
-    <div>
-        <img class="rose" src="rose1.png" alt="🌹">
-        <img class="rose" src="rose2.png" alt="🌹">
-        <img class="rose" src="rose3.png" alt="🌹">
-    </div>
+  <!-- Розочки -->
+  <div>
+    <img class="rose" src="rose1.png" alt="🌹">
+    <img class="rose" src="rose2.png" alt="🌹">
+    <img class="rose" src="rose3.png" alt="🌹">
+  </div>
 
-    <!-- Музыка -->
-    <audio autoplay loop controls>
-        <source src="music.mp3" type="audio/mpeg">
-        Ваш браузер не поддерживает аудио.
-    </audio>
+  <!-- Музыка -->
+  <audio autoplay loop controls>
+    <source src="music.mp3" type="audio/mpeg">
+    Ваш браузер не поддерживает аудио.
+  </audio>
+
+  <!-- Кнопка-сюрприз -->
+  <div>
+    <button onclick="alert('С 8 Марта! 💕')">Нажми для сюрприза</button>
+  </div>
 </div>
 
 </body>

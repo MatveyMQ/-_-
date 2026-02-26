@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>С 8 Марта 🌸</title>
+<title>С 8 Марта 🌷</title>
 <style>
-/* Общие стили */
 body {
   margin: 0;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  background: linear-gradient(120deg, #1a1a1a, #2b2b2b); /* градиент вместо черного */
-  color: #fff;
+  background: linear-gradient(120deg, #1a1a1a, #2b2b2b);
+  color: #ffe6f0;
   overflow-x: hidden;
   min-height: 100vh;
 }
@@ -18,9 +17,10 @@ body {
 .container {
   text-align: center;
   padding: 50px 20px;
+  position: relative;
+  z-index: 2;
 }
 
-/* Заголовок */
 h1 {
   font-size: 40px;
   color: #ffb6c1;
@@ -29,7 +29,6 @@ h1 {
   animation: fadeIn 1.5s forwards 0.5s;
 }
 
-/* Текст */
 p {
   font-size: 18px;
   max-width: 500px;
@@ -39,29 +38,6 @@ p {
   animation: fadeIn 1.5s forwards 1.5s;
 }
 
-/* Падающие лепестки */
-.leaf {
-  position: fixed;
-  top: -50px;
-  width: 30px;
-  height: 30px;
-  background: radial-gradient(circle at 50% 50%, #ffb6c1 0%, #ff69b4 80%);
-  border-radius: 50%;
-  opacity: 0.8;
-  pointer-events: none;
-  animation-name: fall;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-@keyframes fadeIn { to { opacity: 1; } }
-
-@keyframes fall {
-  0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
-  100% { transform: translateY(120vh) rotate(360deg); opacity: 0; }
-}
-
-/* Spotify плеер */
 .spotify {
   margin-top: 30px;
   border-radius: 12px;
@@ -69,6 +45,15 @@ p {
   display: inline-block;
   width: 80%;
   max-width: 300px;
+  z-index: 2;
+  position: relative;
+}
+
+@keyframes fadeIn { to { opacity: 1; } }
+
+@keyframes fall {
+  0% { transform: translateY(-50px) rotate(0deg); }
+  100% { transform: translateY(120vh) rotate(360deg); }
 }
 
 /* Адаптивность */
@@ -81,31 +66,51 @@ p {
 <body>
 
 <div class="container">
-  <h1>С 8 Марта, моя прекрасная 🌸</h1>
+  <h1>С 8 Марта, моя прекрасная 🌷</h1>
 
   <p>
     Пусть этот день подарит тебе море улыбок и счастья.<br>
     Ты — самое светлое, что есть в моей жизни. ❤️
   </p>
 
-  <!-- Spotify плеер -->
   <div class="spotify">
     <iframe src="https://open.spotify.com/embed/track/3n3Ppam7vgaVa1iaRUc9Lp" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
   </div>
 </div>
 
-<!-- JS: падающие лепестки -->
 <script>
-const leafCount = 15; // количество лепестков
-for(let i=0;i<leafCount;i++){
-  const leaf = document.createElement('div');
-  leaf.className = 'leaf';
-  leaf.style.left = Math.random()*100 + 'vw';
-  leaf.style.animationDuration = (5 + Math.random()*5) + 's';
-  leaf.style.animationDelay = Math.random()*5 + 's';
-  leaf.style.width = 15 + Math.random()*20 + 'px';
-  leaf.style.height = leaf.style.width;
-  document.body.appendChild(leaf);
+// SVG тюльпан (маленький)
+const tulipSVG = encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <path fill="currentColor" d="M16 2s-6 8-6 14c0 5 6 10 6 10s6-5 6-10c0-6-6-14-6-14z"/>
+</svg>
+`);
+
+const colors = ['#FF0000', '#FF69B4', '#FFD700', '#FF8C00', '#800080'];
+const tulipCount = 25;
+
+for(let i=0;i<tulipCount;i++){
+  const tulip = document.createElement('div');
+  tulip.style.position = 'fixed';
+  tulip.style.top = '-50px';
+  const size = 20 + Math.random()*20;
+  tulip.style.width = size + 'px';
+  tulip.style.height = size + 'px';
+  tulip.style.left = Math.random()*100 + 'vw';
+  tulip.style.backgroundImage = url("data:image/svg+xml,${tulipSVG}");
+  tulip.style.backgroundSize = 'contain';
+  tulip.style.backgroundRepeat = 'no-repeat';
+  tulip.style.color = colors[Math.floor(Math.random()*colors.length)];
+  tulip.style.opacity = 0.5 + Math.random()*0.3; // видимые но не мешают
+  tulip.style.pointerEvents = 'none';
+  tulip.style.zIndex = 1;
+
+  // Анимация
+  const duration = 8 + Math.random()*7;
+  const delay = Math.random()*5;
+  tulip.style.animation = fall ${duration}s linear ${delay}s infinite;
+
+  document.body.appendChild(tulip);
 }
 </script>
 

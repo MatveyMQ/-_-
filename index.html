@@ -126,7 +126,7 @@
     .video-wrapper {
       position: relative;
       width: 100%;
-      padding-bottom: 56.25%; /* 16:9 */
+      padding-bottom: 56.25%;
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
@@ -146,21 +146,47 @@
       border: none;
     }
 
-     @media (max-width: 600px) {
+    /* --- Мобильные улучшения --- */
+    @media (max-width: 600px) {
       .card {
-        padding: 40px 20px;
-        border-radius: 25px;
+        padding: 30px 16px;
+        border-radius: 24px;
       }
+
       h1 {
-        font-size: 26px;
+        font-size: 24px;
+        margin-bottom: 16px;
       }
+
       p {
-        font-size: 16px;
+        font-size: 15px;
+        margin-bottom: 30px;
+        line-height: 1.5;
       }
+
+      .music iframe {
+        height: 160px; /* более пропорционально */
+      }
+
       .glow {
-        width: 400px;
-        height: 400px;
-        opacity: 0.2;
+        width: 250px;
+        height: 250px;
+        opacity: 0.12; /* очень лёгкое свечение */
+      }
+
+      /* отключаем hover-эффекты на тач-экранах */
+      .music iframe:hover,
+      .video-wrapper:hover {
+        transform: none;
+      }
+
+      /* добавляем немного воздуха между блоками */
+      .music {
+        margin-bottom: 20px;
+      }
+
+      .video-wrapper {
+        margin-top: 10px;
       }
     }
   </style>
@@ -205,6 +231,7 @@
 
 <script>
   (function() {
+    // --- Утилита debounce ---
     function debounce(func, wait) {
       let timeout;
       return function executedFunction(...args) {
@@ -217,13 +244,19 @@
       };
     }
 
+    // --- Генерация звёзд ---
     function generateStars() {
       const starsContainer = document.querySelector('.stars');
       const card = document.querySelector('.card');
       if (!starsContainer || !card) return;
 
+      // Очищаем контейнер
       starsContainer.innerHTML = '';
 
+      // Определяем количество звёзд в зависимости от ширины экрана
+      const starCount = window.innerWidth < 600 ? 30 : 50;
+
+      // Получаем актуальные размеры и позицию карточки
       const rect = card.getBoundingClientRect();
       const safeArea = {
         left: rect.left,
@@ -234,6 +267,7 @@
         height: window.innerHeight
       };
 
+      // Функция проверки, попадает ли точка (в процентах) в карточку
       function isInsideCard(xPercent, yPercent) {
         const x = (xPercent / 100) * safeArea.width;
         const y = (yPercent / 100) * safeArea.height;
@@ -242,30 +276,33 @@
       }
 
       let starsCreated = 0;
-      const maxAttempts = 500;
+      const maxAttempts = 500; // защита от бесконечного цикла
       let attempts = 0;
 
-      while (starsCreated < 50 && attempts < maxAttempts) {
+      while (starsCreated < starCount && attempts < maxAttempts) {
         attempts++;
 
+        // Случайные координаты в процентах
         const x = Math.random() * 100;
         const y = Math.random() * 100;
 
+        // Если точка внутри карточки — пропускаем
         if (isInsideCard(x, y)) {
           continue;
         }
 
+        // Создаём звезду
         const star = document.createElement('div');
         star.classList.add('star');
 
-        const size = Math.random() * 10 + 6;
+        const size = Math.random() * 10 + 6; // от 6 до 16px
         star.style.width = size + 'px';
         star.style.height = size + 'px';
 
         star.style.left = x + '%';
         star.style.top = y + '%';
 
-        star.style.animationDuration = (Math.random() * 4 + 4) + 's';
+        star.style.animationDuration = (Math.random() * 4 + 4) + 's'; // 4-8 сек
         star.style.animationDelay = (Math.random() * 5) + 's';
 
         star.innerHTML = `
@@ -274,6 +311,7 @@
           </svg>
         `;
 
+        // Иногда делаем звезду розовой
         if (Math.random() > 0.75) {
           star.querySelector('svg').style.fill = '#ff4da6';
         }
@@ -283,7 +321,10 @@
       }
     }
 
+    // --- Запуск при загрузке ---
     document.addEventListener('DOMContentLoaded', generateStars);
+
+    // --- Перезапуск при изменении размера окна (с debounce) ---
     window.addEventListener('resize', debounce(generateStars, 150));
   })();
 </script>

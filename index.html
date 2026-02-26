@@ -56,7 +56,6 @@ p {
   100% { transform: translateY(120vh) rotate(360deg); }
 }
 
-/* Адаптивность */
 @media (max-width: 480px) {
   h1 { font-size: 32px; }
   p { font-size: 16px; }
@@ -79,33 +78,31 @@ p {
 </div>
 
 <script>
-// SVG тюльпан (маленький)
-const tulipSVG = encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <path fill="currentColor" d="M16 2s-6 8-6 14c0 5 6 10 6 10s6-5 6-10c0-6-6-14-6-14z"/>
-</svg>
-`);
+// массив ссылок на маленькие цветные тюльпаны (PNG)
+const tulipImages = [
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Red_Tulip_icon.svg/32px-Red_Tulip_icon.svg.png',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Pink_Tulip_icon.svg/32px-Pink_Tulip_icon.svg.png',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Yellow_Tulip_icon.svg/32px-Yellow_Tulip_icon.svg.png',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Orange_Tulip_icon.svg/32px-Orange_Tulip_icon.svg.png',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Purple_Tulip_icon.svg/32px-Purple_Tulip_icon.svg.png'
+];
 
-const colors = ['#FF0000', '#FF69B4', '#FFD700', '#FF8C00', '#800080'];
-const tulipCount = 25;
+const tulipCount = 20;
 
 for(let i=0;i<tulipCount;i++){
-  const tulip = document.createElement('div');
-  tulip.style.position = 'fixed';
-  tulip.style.top = '-50px';
-  const size = 20 + Math.random()*20;
+  const tulip = document.createElement('img');
+  tulip.src = tulipImages[Math.floor(Math.random()*tulipImages.length)];
+  const size = 15 + Math.random()*20;
   tulip.style.width = size + 'px';
   tulip.style.height = size + 'px';
+  tulip.style.position = 'fixed';
+  tulip.style.top = '-50px';
   tulip.style.left = Math.random()*100 + 'vw';
-  tulip.style.backgroundImage = url("data:image/svg+xml,${tulipSVG}");
-  tulip.style.backgroundSize = 'contain';
-  tulip.style.backgroundRepeat = 'no-repeat';
-  tulip.style.color = colors[Math.floor(Math.random()*colors.length)];
-  tulip.style.opacity = 0.5 + Math.random()*0.3; // видимые но не мешают
+  tulip.style.opacity = 0.6;
   tulip.style.pointerEvents = 'none';
   tulip.style.zIndex = 1;
 
-  // Анимация
+  // анимация
   const duration = 8 + Math.random()*7;
   const delay = Math.random()*5;
   tulip.style.animation = fall ${duration}s linear ${delay}s infinite;

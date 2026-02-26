@@ -1,157 +1,165 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>С 8 Марта 🌷</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>С 8 Марта 🌷</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(circle at top, #1a1a1a, #000);
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
+      min-height: 100vh;
+    }
 
-<style>
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  background: radial-gradient(circle at top,#1a1a1a,#000);
-  color:#fff;
-  overflow-x:hidden;
-  position: relative;
-}
+    .star {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      opacity: 0;
+      animation: twinkle linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
 
-.star{
-  position:absolute;
-  width:12px;
-  height:12px;
-  opacity:0;
-  animation:twinkle linear infinite;
-  pointer-events: none;
-  z-index: 1;
-}
+    .star svg {
+      width: 100%;
+      height: 100%;
+      fill: white;
+      filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
+    }
 
-.star svg{
-  width:100%;
-  height:100%;
-  fill:white;
-}
+    @keyframes twinkle {
+      0% { opacity: 0; transform: scale(0.8); }
+      50% { opacity: 0.9; transform: scale(1.1); }
+      100% { opacity: 0; transform: scale(0.8); }
+    }
 
-@keyframes twinkle{
-  0%{opacity:0;}
-  50%{opacity:0.8;}
-  100%{opacity:0;}
-}
+    .glow {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, #ff4da6 0%, transparent 70%);
+      filter: blur(140px);
+      opacity: 0.35;
+      animation: pulse 6s infinite alternate;
+      z-index: 1;
+    }
 
-.glow{
-  position:absolute;
-  width:800px;
-  height:800px;
-  background:radial-gradient(circle,#ff4da6 0%,transparent 70%);
-  filter:blur(140px);
-  opacity:0.35;
-  animation:pulse 6s infinite alternate;
-  z-index: 1;
-}
+    @keyframes pulse {
+      from { opacity: 0.3; transform: scale(1); }
+      to { opacity: 0.5; transform: scale(1.1); }
+    }
 
-@keyframes pulse{
-  from{opacity:0.3;}
-  to{opacity:0.5;}
-}
+    .main {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 2;
+    }
 
-.main{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:40px 20px;
-  position:relative;
-  z-index: 2;
-}
+    .card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(30px);
+      border-radius: 40px;
+      padding: 60px 40px;
+      max-width: 900px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+      z-index: 3;
+    }
 
-.card{
-  position:relative;
-  background:rgba(255,255,255,0.06);
-  backdrop-filter:blur(30px);
-  border-radius:40px;
-  padding:60px 40px;
-  max-width:900px;
-  width:100%;
-  text-align:center;
-  box-shadow:0 30px 80px rgba(0,0,0,0.7);
-  z-index:3;
-}
+    .fade {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 1.5s ease forwards;
+    }
 
-.fade{
-  opacity:0;
-  transform:translateY(20px);
-  animation:fadeUp 1.5s ease forwards;
-}
+    .fade.delay1 { animation-delay: 0.5s; }
+    .fade.delay2 { animation-delay: 1.2s; }
+    .fade.delay3 { animation-delay: 1.8s; }
 
-.fade.delay1{ animation-delay:0.5s; }
-.fade.delay2{ animation-delay:1.2s; }
-.fade.delay3{ animation-delay:1.8s; }
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-@keyframes fadeUp{
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
+    h1 {
+      font-size: 40px;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
 
-h1{
-  font-size:40px;
-  margin-bottom:20px;
-}
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 50px;
+      opacity: 0.9;
+    }
 
-p{
-  font-size:18px;
-  line-height:1.6;
-  margin-bottom:50px;
-  opacity:0.85;
-}
+    .music iframe {
+      width: 100%;
+      height: 244px;
+      border: none;
+      border-radius: 20px;
+      transition: transform 0.4s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
 
-.music iframe{
-  width:100%;
-  height:244px;
-  border:none;
-  border-radius:20px;
-  transition:transform 0.4s ease;
-}
+    .music iframe:hover {
+      transform: scale(1.02);
+    }
 
-.music iframe:hover{
-  transform:scale(1.02);
-}
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 */
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      transition: transform 0.4s ease;
+    }
 
-.video-wrapper{
-  position:relative;
-  width:100%;
-  padding-bottom:56.25%;
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:0 20px 50px rgba(0,0,0,0.6);
-  transition:transform 0.4s ease;
-}
+    .video-wrapper:hover {
+      transform: scale(1.02);
+    }
 
-.video-wrapper:hover{
-  transform:scale(1.02);
-}
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
 
-.video-wrapper iframe{
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  border:none;
-}
-
-@media (max-width:600px){
-  .card{
-    padding:40px 20px;
-    border-radius:25px;
-  }
-  h1{
-    font-size:26px;
-  }
-}
-</style>
+    @media (max-width: 600px) {
+      .card {
+        padding: 40px 20px;
+        border-radius: 25px;
+      }
+      h1 {
+        font-size: 26px;
+      }
+      p {
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
 <div class="stars"></div>
@@ -169,8 +177,10 @@ p{
 
     <div class="music fade delay2">
       <iframe 
+        title="Плейлист с музыкой на Яндекс.Музыке"
         src="https://music.yandex.ru/iframe/album/27015943/track/116515817"
-        allow="clipboard-write">
+        allow="autoplay; clipboard-write"
+        loading="lazy">
       </iframe>
     </div>
 
@@ -178,68 +188,99 @@ p{
 
     <div class="video-wrapper fade delay3">
       <iframe 
+        title="Видеопоздравление на YouTube"
         src="https://www.youtube.com/embed/AZ1psyyKmMY"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen>
+        allowfullscreen
+        loading="lazy">
       </iframe>
     </div>
-
   </div>
 </div>
 
 <script>
-const starsContainer = document.querySelector('.stars');
-const cardRect = document.querySelector('.card').getBoundingClientRect();
-const safeArea = {
-  left: cardRect.left,
-  top: cardRect.top,
-  right: cardRect.right,
-  bottom: cardRect.bottom,
-  width: window.innerWidth,
-  height: window.innerHeight
-};
-
-function isInSafeArea(x, y) {
-  return x > safeArea.left && x < safeArea.right && y > safeArea.top && y < safeArea.bottom;
-}
-
-for(let i = 0; i < 50; i++){
-  let star;
-  let attempts = 0;
-  do {
-    const size = Math.random() * 10 + 6;
-    star = document.createElement('div');
-    star.classList.add('star');
-
-    star.style.width = size + 'px';
-    star.style.height = size + 'px';
-
-    const x = Math.random() * 100;
-    const y = Math.random() * 100;
-    star.style.left = x + '%';
-    star.style.top = y + '%';
-
-    star.style.animationDuration = (Math.random() * 4 + 4) + 's';
-    star.style.animationDelay = (Math.random() * 5) + 's';
-
-    star.innerHTML = `
-      <svg viewBox="0 0 24 24">
-        <path d="M12 2 L14 9 L22 12 L14 15 L12 22 L10 15 L2 12 L10 9 Z"/>
-      </svg>
-    `;
-
-    if(Math.random() > 0.75){
-      star.querySelector('svg').style.fill = '#ff4da6';
+  (function() {
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
     }
 
-    attempts++;
-  } while (attempts < 100 && isInSafeArea(
-    (parseFloat(star.style.left) / 100) * safeArea.width,
-    (parseFloat(star.style.top) / 100) * safeArea.height
-  ));
+    function generateStars() {
+      const starsContainer = document.querySelector('.stars');
+      const card = document.querySelector('.card');
+      if (!starsContainer || !card) return;
 
-  starsContainer.appendChild(star);
-}
+      starsContainer.innerHTML = '';
+
+      const rect = card.getBoundingClientRect();
+      const safeArea = {
+        left: rect.left,
+        top: rect.top,
+        right: rect.right,
+        bottom: rect.bottom,
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
+
+      function isInsideCard(xPercent, yPercent) {
+        const x = (xPercent / 100) * safeArea.width;
+        const y = (yPercent / 100) * safeArea.height;
+        return (x >= safeArea.left && x <= safeArea.right &&
+                y >= safeArea.top && y <= safeArea.bottom);
+      }
+
+      let starsCreated = 0;
+      const maxAttempts = 500;
+      let attempts = 0;
+
+      while (starsCreated < 50 && attempts < maxAttempts) {
+        attempts++;
+
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+
+        if (isInsideCard(x, y)) {
+          continue;
+        }
+
+        const star = document.createElement('div');
+        star.classList.add('star');
+
+        const size = Math.random() * 10 + 6;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+
+        star.style.left = x + '%';
+        star.style.top = y + '%';
+
+        star.style.animationDuration = (Math.random() * 4 + 4) + 's';
+        star.style.animationDelay = (Math.random() * 5) + 's';
+
+        star.innerHTML = `
+          <svg viewBox="0 0 24 24">
+            <path d="M12 2 L14 9 L22 12 L14 15 L12 22 L10 15 L2 12 L10 9 Z"/>
+          </svg>
+        `;
+
+        if (Math.random() > 0.75) {
+          star.querySelector('svg').style.fill = '#ff4da6';
+        }
+
+        starsContainer.appendChild(star);
+        starsCreated++;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', generateStars);
+    window.addEventListener('resize', debounce(generateStars, 150));
+  })();
 </script>
 </body>
 </html>

@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="color-scheme" content="dark only">
   <title>С 8 Марта 🌷</title>
+  <!-- Предварительное подключение к серверам плееров -->
+  <link rel="preconnect" href="https://music.yandex.ru">
+  <link rel="preconnect" href="https://youtube.com">
+  <link rel="preconnect" href="https://www.youtube.com">
+  <link rel="preconnect" href="https://i.ytimg.com">
   <style>
+    /* Все стили без изменений */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -173,7 +179,7 @@
     }
 
     .yandex-fallback {
-      display: none; /* больше не показывается автоматически */
+      display: none;
       width: 100%;
       max-width: 614px;
       margin: 0 auto;
@@ -198,8 +204,6 @@
     .yandex-fallback a:hover {
       background: #ff7ab9;
     }
-
-    /* Удалён медиа-запрос, скрывавший Яндекс на мобильных */
 
     .video-container {
       position: relative;
@@ -331,25 +335,18 @@
   <div class="glow"></div>
 
   <div class="card">
-    <!-- Заголовок (будет печататься) -->
     <h1 id="typewriter-title"></h1>
-
-    <!-- Таймер (изначально скрыт) -->
     <div class="timer-container" id="timer-block">
       <div class="timer-label">Мы знакомы уже:</div>
       <div class="timer" id="timer">0 дней 00:00:00</div>
     </div>
-
-    <!-- Основной текст (будет печататься) -->
     <p id="typewriter-paragraph"></p>
-
-    <!-- Медиа-блок (изначально скрыт) -->
     <div class="minimal-media" id="media-block">
       <div class="media-player" id="player-yandex">
         <div class="yandex-container">
           <iframe 
             frameborder="0" 
-            allow="autoplay; fullscreen; encrypted-media; clipboard-write"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             src="https://music.yandex.ru/iframe/album/27015943/track/116515817?autoplay=0"
             title="Яндекс.Музыка"
             loading="lazy">
@@ -359,19 +356,17 @@
           <a href="#" id="yandex-music-link">Слушать в Яндекс.Музыке</a>
         </div>
       </div>
-
       <div class="media-player" id="player-youtube">
         <div class="video-container">
           <iframe 
             title="YouTube"
             src="https://www.youtube.com/embed/AZ1psyyKmMY"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
             allowfullscreen
             loading="lazy">
           </iframe>
         </div>
       </div>
-
       <div class="media-switch">
         <span class="switch-dot" data-media="yandex" data-tooltip="Яндекс.Музыка"></span>
         <span class="switch-dot" data-media="youtube" data-tooltip="YouTube"></span>
@@ -384,40 +379,27 @@
 (function() {
   "use strict";
 
-  // === Звёздный фон ===
   function generateStars() {
     const starsContainer = document.querySelector('.stars');
     const card = document.querySelector('.card');
     if (!starsContainer || !card) return;
-
     if (window.innerWidth <= 600) return;
-
     starsContainer.innerHTML = '';
-
     const starCount = 25;
     const rect = card.getBoundingClientRect();
-
     function isInsideCard(xPercent, yPercent) {
       const x = (xPercent / 100) * window.innerWidth;
       const y = (yPercent / 100) * window.innerHeight;
-      return (
-        x >= rect.left &&
-        x <= rect.right &&
-        y >= rect.top &&
-        y <= rect.bottom
-      );
+      return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
     }
-
     let created = 0;
     let attempts = 0;
     const maxAttempts = 500;
-
     while (created < starCount && attempts < maxAttempts) {
       attempts++;
       const x = Math.random() * 100;
       const y = Math.random() * 100;
       if (isInsideCard(x, y)) continue;
-
       const star = document.createElement('div');
       star.className = 'star';
       star.style.left = x + '%';
@@ -429,10 +411,8 @@
       created++;
     }
   }
-
   window.addEventListener('load', generateStars);
 
-  // === Таймер ===
   function plural(n, one, two, five) {
     n = Math.abs(n) % 100;
     const n1 = n % 10;
@@ -459,7 +439,6 @@
       months--;
     }
     if (months < 0) { months += 12; years--; }
-
     return { years, months, days, hours, minutes, seconds };
   }
 
@@ -467,33 +446,23 @@
     const startDate = new Date(2021, 1, 18);
     const now = new Date();
     const diff = dateDiff(startDate, now);
-
     const parts = [];
-
-    if (diff.years > 0)
-      parts.push(diff.years + ' ' + plural(diff.years, 'год', 'года', 'лет'));
-    if (diff.months > 0)
-      parts.push(diff.months + ' ' + plural(diff.months, 'месяц', 'месяца', 'месяцев'));
-    if (diff.days > 0)
-      parts.push(diff.days + ' ' + plural(diff.days, 'день', 'дня', 'дней'));
-    if (diff.hours > 0)
-      parts.push(diff.hours + ' ' + plural(diff.hours, 'час', 'часа', 'часов'));
-    if (diff.minutes > 0)
-      parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минута', 'минуты', 'минут'));
+    if (diff.years > 0) parts.push(diff.years + ' ' + plural(diff.years, 'год', 'года', 'лет'));
+    if (diff.months > 0) parts.push(diff.months + ' ' + plural(diff.months, 'месяц', 'месяца', 'месяцев'));
+    if (diff.days > 0) parts.push(diff.days + ' ' + plural(diff.days, 'день', 'дня', 'дней'));
+    if (diff.hours > 0) parts.push(diff.hours + ' ' + plural(diff.hours, 'час', 'часа', 'часов'));
+    if (diff.minutes > 0) parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минута', 'минуты', 'минут'));
     parts.push(diff.seconds + ' ' + plural(diff.seconds, 'секунда', 'секунды', 'секунд'));
-
     const timer = document.getElementById('timer');
     if (timer) timer.textContent = parts.join(' ');
   }
 
-  // === Эффект печатной машинки (без курсора) ===
   const titleEl = document.getElementById('typewriter-title');
   const timerBlock = document.getElementById('timer-block');
   const paragraphEl = document.getElementById('typewriter-paragraph');
   const mediaBlock = document.getElementById('media-block');
 
   const titleText = 'С 8 Марта, моя прекрасная 🌷';
-
   const paragraphHTML = `Пусть этот день подарит тебе море улыбок и счастья.<br>
 Ты — самое светлое, что есть в моей жизни.<br><br>
 Каждое утро я просыпаюсь и думаю о тебе. Твой смех звучит для меня как самая красивая мелодия. Твои глаза сияют ярче всех звёзд на этом небе. Я благодарен судьбе за каждый миг, проведённый рядом с тобой.<br><br>
@@ -501,19 +470,17 @@
 Желаю тебе бесконечного счастья, крепкого здоровья, исполнения самых заветных желаний. Пусть каждый день приносит только приятные сюрпризы, пусть окружают только искренние люди, а в душе всегда цветёт весна. Ты заслуживаешь самого лучшего в этом мире, и я сделаю всё, чтобы ты это чувствовала каждый день.<br><br>
 Спасибо тебе за твою улыбку, за твои объятия, за то, что ты просто есть. С 8 Марта, моя любимая! 🌷🌷🌷`;
 
-  // Преобразуем HTML в обычный текст с символами новой строки для печати
   function getPlainTextWithNewlines(html) {
     return html.replace(/<br\s*\/?>/g, '\n').replace(/<[^>]*>/g, '');
   }
-
   const paragraphPlain = getPlainTextWithNewlines(paragraphHTML);
-  const speed = 35; // миллисекунд на символ (можно настроить)
+  
+  // Ускоренная печать: 20 мс на символ
+  const speed = 20;
 
-  // Функция для печати текста в элемент (без курсора)
   function typeText(element, text, callback) {
     let index = 0;
-    element.innerHTML = ''; // очищаем элемент
-
+    element.innerHTML = '';
     function type() {
       if (index < text.length) {
         const char = text.charAt(index);
@@ -525,42 +492,28 @@
         index++;
         setTimeout(type, speed);
       } else {
-        // Печать завершена
-        if (typeof callback === 'function') {
-          callback();
-        }
+        if (typeof callback === 'function') callback();
       }
     }
-
-    // Запускаем печать
     type();
   }
 
-  // Запуск всего процесса
   function startTypewriter() {
-    // Шаг 1: печатаем заголовок
     typeText(titleEl, titleText, function() {
-      // После заголовка показываем таймер
       timerBlock.style.display = 'block';
-      // Запускаем обновление таймера, если ещё не запущен
       if (!window.timerInterval) {
         updateTimer();
         window.timerInterval = setInterval(updateTimer, 1000);
       }
-      // Небольшая пауза перед печатью параграфа
       setTimeout(function() {
-        // Шаг 2: печатаем параграф
         typeText(paragraphEl, paragraphPlain, function() {
-          // После параграфа показываем медиа-блок
           mediaBlock.style.display = 'block';
-          // Активируем Яндекс.Музыку на всех устройствах
           activateMedia('yandex');
         });
       }, 500);
     });
   }
 
-  // === Переключение медиаплееров ===
   const dots = document.querySelectorAll('.switch-dot');
   const players = {
     yandex: document.getElementById('player-yandex'),
@@ -570,7 +523,6 @@
   function activateMedia(key) {
     dots.forEach(d => d.classList.remove('active'));
     Object.values(players).forEach(p => p && p.classList.remove('active'));
-
     const dot = [...dots].find(d => d.dataset.media === key);
     if (dot) dot.classList.add('active');
     if (players[key]) players[key].classList.add('active');
@@ -591,7 +543,6 @@
     });
   }
 
-  // Стартуем после полной загрузки страницы
   window.addEventListener('load', startTypewriter);
 })();
 </script>

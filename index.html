@@ -192,23 +192,13 @@
       border: none;
     }
 
-    /* Стили для fallback-блока (кнопка) */
+    /* Fallback для мобильных — только кнопка, без текста и без фона */
     .yandex-fallback {
       display: none;
       width: 100%;
       max-width: 614px;
       margin: 0 auto;
-      padding: 30px 20px;
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 20px;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .yandex-fallback p {
-      margin-bottom: 20px;
-      font-size: 16px;
-      opacity: 0.9;
     }
 
     .yandex-fallback a {
@@ -223,13 +213,14 @@
       transition: background 0.2s;
       border: none;
       cursor: pointer;
+      margin: 20px 0;
     }
 
     .yandex-fallback a:hover {
       background: #ff7ab9;
     }
 
-    /* На мобильных показываем fallback, скрываем iframe */
+    /* На мобильных показываем кнопку, скрываем iframe */
     @media (max-width: 600px) {
       .yandex-container {
         display: none;
@@ -398,7 +389,6 @@
           </iframe>
         </div>
         <div class="yandex-fallback">
-          <p>🎵 Трек доступен в Яндекс.Музыке</p>
           <a href="#" id="yandex-music-link">Слушать в Яндекс.Музыке</a>
         </div>
       </div>

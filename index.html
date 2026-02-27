@@ -467,8 +467,8 @@
     if (diff.months > 0) parts.push(diff.months + ' ' + plural(diff.months, 'месяц', 'месяца', 'месяцев'));
     if (diff.days > 0) parts.push(diff.days + ' ' + plural(diff.days, 'день', 'дня', 'дней'));
     if (diff.hours > 0) parts.push(diff.hours + ' ' + plural(diff.hours, 'час', 'часа', 'часов'));
-    if (diff.minutes > 0) parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минута', 'минуты', 'минут'));
-    parts.push(diff.seconds + ' ' + plural(diff.seconds, 'секунда', 'секунды', 'секунд'));
+    if (diff.minutes > 0) parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минуту', 'минуты', 'минут'));
+    parts.push(diff.seconds + ' ' + plural(diff.seconds, 'секунду', 'секунды', 'секунд'));
     const timer = document.getElementById('timer');
     if (timer) timer.textContent = parts.join(' ');
   }

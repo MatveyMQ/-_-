@@ -2,9 +2,10 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>С 8 Марта 🌷</title>
   <style>
+    /* Сбрасываем все отступы и делаем фон на весь экран */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -17,6 +18,9 @@
       color: #fff;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       overflow-x: hidden;
+      /* Убираем возможные белые полосы на мобильных */
+      margin: 0;
+      padding: 0;
     }
 
     body {
@@ -67,7 +71,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 40px 20px;
+      padding: 20px; /* чуть меньше на мобильных */
       position: relative;
       z-index: 2;
     }
@@ -142,11 +146,6 @@
       height: 244px;
     }
 
-    /* Spotify */
-    #player-spotify iframe {
-      height: 152px;
-    }
-
     /* YouTube (видео) */
     .video-wrapper {
       position: relative;
@@ -165,7 +164,7 @@
       height: 100%;
     }
 
-    /* Точки навигации (без стрелок) */
+    /* Точки навигации (две точки) */
     .media-switch {
       display: flex;
       justify-content: center;
@@ -215,7 +214,7 @@
     /* --- Мобильные улучшения --- */
     @media (max-width: 600px) {
       .main {
-        padding: 20px 10px;
+        padding: 10px; /* убираем лишние отступы */
       }
 
       .card {
@@ -235,11 +234,7 @@
       }
 
       #player-yandex iframe {
-        height: 160px;
-      }
-
-      #player-spotify iframe {
-        height: 132px;
+        height: 160px; /* компактнее на мобильных */
       }
 
       .glow {
@@ -255,7 +250,7 @@
       }
 
       .switch-dot:hover::after {
-        display: none;
+        display: none; /* на мобильных подсказки не нужны */
       }
     }
   </style>
@@ -275,7 +270,7 @@
       Ты — самое светлое, что есть в моей жизни.
     </p>
 
-    <!-- Единый медиа-блок: Яндекс.Музыка, Spotify, YouTube -->
+    <!-- Единый медиа-блок: Яндекс.Музыка и YouTube -->
     <div class="minimal-media fade delay2" id="swipe-container">
       <!-- Яндекс.Музыка (активна по умолчанию) -->
       <div class="media-player active" id="player-yandex">
@@ -283,19 +278,6 @@
           title="Яндекс.Музыка"
           src="https://music.yandex.ru/iframe/album/27015943/track/116515817"
           allow="autoplay; clipboard-write"
-          loading="lazy">
-        </iframe>
-      </div>
-
-      <!-- Spotify -->
-      <div class="media-player" id="player-spotify">
-        <iframe 
-          style="border-radius:12px"
-          src="https://open.spotify.com/embed/track/6NGzHs6RPPbK40ET9YX7V4?utm_source=generator&theme=0"
-          width="100%"
-          height="152"
-          frameBorder="0"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy">
         </iframe>
       </div>
@@ -313,10 +295,9 @@
         </div>
       </div>
 
-      <!-- Точки навигации (стрелки убраны) -->
+      <!-- Две точки навигации -->
       <div class="media-switch">
         <span class="switch-dot active" data-media="yandex" data-tooltip="Яндекс.Музыка"></span>
-        <span class="switch-dot" data-media="spotify" data-tooltip="Spotify"></span>
         <span class="switch-dot" data-media="youtube" data-tooltip="YouTube"></span>
       </div>
     </div>
@@ -404,16 +385,15 @@
     document.addEventListener('DOMContentLoaded', generateStars);
     window.addEventListener('resize', debounce(generateStars, 150));
 
-    // --- Логика переключения плееров (точки + свайп ТОЛЬКО НА МОБИЛЬНЫХ) ---
+    // --- Логика переключения плееров (точки + свайп только на мобильных) ---
     document.addEventListener('DOMContentLoaded', function() {
       const container = document.getElementById('swipe-container');
       const dots = document.querySelectorAll('.switch-dot');
       const players = {
         yandex: document.getElementById('player-yandex'),
-        spotify: document.getElementById('player-spotify'),
         youtube: document.getElementById('player-youtube')
       };
-      const mediaList = ['yandex', 'spotify', 'youtube'];
+      const mediaList = ['yandex', 'youtube'];
 
       // Функция активации плеера по ключу
       function activateMedia(mediaKey) {
@@ -437,14 +417,13 @@
       });
 
       // --- Свайп только для мобильных устройств (touch) ---
-      // Проверяем, поддерживает ли устройство touch
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
       if (isTouchDevice) {
         let startX = 0;
         let startY = 0;
         let isSwiping = false;
-        const swipeThreshold = 50; // минимальное расстояние для свайпа
+        const swipeThreshold = 30; // уменьшил порог для более отзывчивого свайпа
 
         function handleSwipe(deltaX, deltaY) {
           if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
@@ -454,7 +433,7 @@
             const currentIndex = mediaList.indexOf(currentActive.dataset.media);
             let newIndex;
             if (deltaX > 0) {
-              // свайп вправо -> предыдущий
+              // свайп вправо -> предыдущий (в нашем случае из двух: yandex -> youtube или наоборот)
               newIndex = (currentIndex - 1 + mediaList.length) % mediaList.length;
             } else {
               // свайп влево -> следующий
@@ -469,12 +448,13 @@
           startX = touch.clientX;
           startY = touch.clientY;
           isSwiping = true;
-        });
+        }, { passive: true });
 
         container.addEventListener('touchmove', (e) => {
           if (!isSwiping) return;
-          e.preventDefault(); // предотвращаем прокрутку страницы
-        });
+          // Предотвращаем прокрутку страницы во время свайпа
+          e.preventDefault();
+        }, { passive: false });
 
         container.addEventListener('touchend', (e) => {
           if (!isSwiping) return;
@@ -483,7 +463,7 @@
           const deltaY = touch.clientY - startY;
           handleSwipe(deltaX, deltaY);
           isSwiping = false;
-        });
+        }, { passive: true });
 
         container.addEventListener('touchcancel', () => {
           isSwiping = false;

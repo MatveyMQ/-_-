@@ -37,7 +37,7 @@
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
-    /* Звезды — теперь статичные белые точки */
+    /* Звёзды — статичные белые точки */
     .stars {
       position: fixed;
       top: 0;
@@ -58,7 +58,7 @@
       z-index: 1;
     }
 
-    /* Свечение — центрировано */
+    /* Свечение */
     .glow {
       position: absolute;
       top: 50%;
@@ -324,7 +324,7 @@
         display: none;
       }
       .stars {
-        display: none; /* скрываем звезды на мобильных */
+        display: none;
       }
     }
 
@@ -411,18 +411,17 @@
 (function() {
   "use strict";
 
-  /* ---------- Звезды (только для десктопа, статичные) ---------- */
+  /* ---------- Звёзды (только для десктопа, статичные) ---------- */
   function generateStars() {
     const starsContainer = document.querySelector('.stars');
     const card = document.querySelector('.card');
     if (!starsContainer || !card) return;
 
-    // Звезды только на десктопе (ширина > 600px)
     if (window.innerWidth <= 600) return;
 
     starsContainer.innerHTML = '';
 
-    const starCount = 25; // чуть больше для красоты
+    const starCount = 25;
     const rect = card.getBoundingClientRect();
 
     function isInsideCard(xPercent, yPercent) {
@@ -450,8 +449,7 @@
       star.className = 'star';
       star.style.left = x + '%';
       star.style.top = y + '%';
-      // случайный размер
-      const size = Math.random() * 4 + 2; // от 2 до 6 пикселей
+      const size = Math.random() * 4 + 2;
       star.style.width = size + 'px';
       star.style.height = size + 'px';
       starsContainer.appendChild(star);
@@ -518,13 +516,12 @@
   setInterval(updateTimer, 1000);
   updateTimer();
 
-  /* ---------- Переключение плееров по клику (свайпы удалены) ---------- */
+  /* ---------- Переключение плееров по клику ---------- */
   const dots = document.querySelectorAll('.switch-dot');
   const players = {
     yandex: document.getElementById('player-yandex'),
     youtube: document.getElementById('player-youtube')
   };
-  const mediaList = ['yandex', 'youtube'];
 
   function activateMedia(key) {
     dots.forEach(d => d.classList.remove('active'));
@@ -554,16 +551,13 @@
     activateMedia('yandex');
   }
 
-  // Обработка клика по кнопке "Слушать в Яндекс.Музыке" (fallback)
+  // Обработка клика по кнопке "Слушать в Яндекс.Музыке" — открываем веб-версию без системного диалога
   const yandexLink = document.getElementById('yandex-music-link');
   if (yandexLink) {
     yandexLink.addEventListener('click', (e) => {
       e.preventDefault();
-      // Пытаемся открыть приложение, если не получается – открываем веб-версию
-      window.location.href = 'yandexmusic://track/116515817';
-      setTimeout(() => {
-        window.open('https://music.yandex.ru/album/27015943/track/116515817', '_blank');
-      }, 500);
+      // Открываем веб-версию трека в новой вкладке — системный диалог не появляется
+      window.open('https://music.yandex.ru/album/27015943/track/116515817', '_blank');
     });
   }
 

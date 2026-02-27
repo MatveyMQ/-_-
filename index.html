@@ -6,6 +6,7 @@
   <meta name="color-scheme" content="dark only">
   <title>С 8 Марта 🌷</title>
   <style>
+    /* Все стили без изменений */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -560,8 +561,8 @@
         typeText(paragraphEl, paragraphPlain, function() {
           // После параграфа показываем медиа-блок
           mediaBlock.style.display = 'block';
-          // Активируем нужный плеер
-          activateAppropriateMedia();
+          // Активируем Яндекс.Музыку на всех устройствах (по просьбе)
+          activateMedia('yandex');
         });
       }, 500);
     });
@@ -583,16 +584,9 @@
     if (players[key]) players[key].classList.add('active');
   }
 
+  // Функция detectMobile больше не используется для выбора плеера, но оставлена на всякий случай
   function detectMobile() {
     return window.innerWidth <= 600 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  }
-
-  function activateAppropriateMedia() {
-    if (detectMobile()) {
-      activateMedia('youtube');
-    } else {
-      activateMedia('yandex');
-    }
   }
 
   dots.forEach(dot => {

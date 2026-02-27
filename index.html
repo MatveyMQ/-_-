@@ -2,20 +2,25 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>С 8 Марта 🌷</title>
   <style>
     * {
       box-sizing: border-box;
-    }
-    body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+      min-height: 100vh;
       background: radial-gradient(circle at top, #1a1a1a, #000);
       color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       overflow-x: hidden;
+    }
+
+    body {
       position: relative;
-      min-height: 100vh;
     }
 
     .star {
@@ -110,9 +115,11 @@
       opacity: 0.9;
     }
 
-    /* --- Единый медиа-блок (минимализм) --- */
+    /* --- Единый медиа-блок --- */
     .minimal-media {
       margin: 20px 0;
+      width: 100%;
+      touch-action: pan-y pinch-zoom; /* разрешаем вертикальную прокрутку, горизонтальную будем обрабатывать сами */
     }
 
     .media-player {
@@ -158,41 +165,20 @@
       height: 100%;
     }
 
-    /* --- Навигация (стрелки + яркие белые точки) --- */
-    .media-navigation {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 25px;
-    }
-
-    .nav-arrow {
-      font-size: 24px;
-      color: rgba(255, 255, 255, 0.7);
-      cursor: pointer;
-      user-select: none;
-      transition: color 0.2s;
-      line-height: 1;
-      padding: 5px 10px;
-    }
-
-    .nav-arrow:hover {
-      color: white;
-    }
-
+    /* Точки навигации (без стрелок) */
     .media-switch {
       display: flex;
+      justify-content: center;
       gap: 25px;
+      margin-top: 25px;
     }
 
     .switch-dot {
       width: 14px;
       height: 14px;
       border-radius: 50%;
-      background: white;        /* ярко-белые */
-      opacity: 1;               /* полностью непрозрачные */
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* лёгкое свечение для контраста */
+      background: white;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
       cursor: pointer;
       transition: all 0.2s ease;
       padding: 8px;
@@ -221,13 +207,17 @@
     }
 
     .switch-dot.active {
-      background: #ff4da6; /* розовая активная */
+      background: #ff4da6;
       box-shadow: 0 0 12px #ff4da6;
       transform: scale(1.2);
     }
 
     /* --- Мобильные улучшения --- */
     @media (max-width: 600px) {
+      .main {
+        padding: 20px 10px;
+      }
+
       .card {
         padding: 30px 16px;
         border-radius: 24px;
@@ -258,15 +248,6 @@
         opacity: 0.12;
       }
 
-      .media-navigation {
-        gap: 15px;
-      }
-
-      .nav-arrow {
-        font-size: 28px;
-        padding: 8px 12px;
-      }
-
       .switch-dot {
         width: 18px;
         height: 18px;
@@ -295,18 +276,18 @@
     </p>
 
     <!-- Единый медиа-блок: Яндекс.Музыка, Spotify, YouTube -->
-    <div class="minimal-media fade delay2">
+    <div class="minimal-media fade delay2" id="swipe-container">
       <!-- Яндекс.Музыка (активна по умолчанию) -->
       <div class="media-player active" id="player-yandex">
         <iframe 
-          title="Плейлист с музыкой на Яндекс.Музыке"
+          title="Яндекс.Музыка"
           src="https://music.yandex.ru/iframe/album/27015943/track/116515817"
           allow="autoplay; clipboard-write"
           loading="lazy">
         </iframe>
       </div>
 
-      <!-- Spotify (с вашим ID трека) -->
+      <!-- Spotify -->
       <div class="media-player" id="player-spotify">
         <iframe 
           style="border-radius:12px"
@@ -323,7 +304,7 @@
       <div class="media-player" id="player-youtube">
         <div class="video-wrapper">
           <iframe 
-            title="Видеопоздравление на YouTube"
+            title="YouTube"
             src="https://www.youtube.com/embed/AZ1psyyKmMY"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
@@ -332,15 +313,11 @@
         </div>
       </div>
 
-      <!-- Навигация: стрелки + яркие белые точки -->
-      <div class="media-navigation">
-        <span class="nav-arrow" id="arrow-prev">←</span>
-        <div class="media-switch">
-          <span class="switch-dot active" data-media="yandex" data-tooltip="Яндекс.Музыка"></span>
-          <span class="switch-dot" data-media="spotify" data-tooltip="Spotify"></span>
-          <span class="switch-dot" data-media="youtube" data-tooltip="YouTube"></span>
-        </div>
-        <span class="nav-arrow" id="arrow-next">→</span>
+      <!-- Точки навигации (стрелки убраны) -->
+      <div class="media-switch">
+        <span class="switch-dot active" data-media="yandex" data-tooltip="Яндекс.Музыка"></span>
+        <span class="switch-dot" data-media="spotify" data-tooltip="Spotify"></span>
+        <span class="switch-dot" data-media="youtube" data-tooltip="YouTube"></span>
       </div>
     </div>
   </div>
@@ -348,7 +325,7 @@
 
 <script>
   (function() {
-    // --- Звёзды (с debounce и адаптацией под мобильные) ---
+    // --- Звёзды ---
     function debounce(func, wait) {
       let timeout;
       return function executedFunction(...args) {
@@ -427,8 +404,9 @@
     document.addEventListener('DOMContentLoaded', generateStars);
     window.addEventListener('resize', debounce(generateStars, 150));
 
-    // --- Логика переключения для трёх плееров (точки + стрелки) ---
+    // --- Логика переключения плееров (точки + свайп ТОЛЬКО НА МОБИЛЬНЫХ) ---
     document.addEventListener('DOMContentLoaded', function() {
+      const container = document.getElementById('swipe-container');
       const dots = document.querySelectorAll('.switch-dot');
       const players = {
         yandex: document.getElementById('player-yandex'),
@@ -450,7 +428,7 @@
         }
       }
 
-      // Клик по точкам
+      // Клик по точкам (работает везде)
       dots.forEach(dot => {
         dot.addEventListener('click', function() {
           const media = this.dataset.media;
@@ -458,27 +436,59 @@
         });
       });
 
-      // Стрелки
-      const prevArrow = document.getElementById('arrow-prev');
-      const nextArrow = document.getElementById('arrow-next');
+      // --- Свайп только для мобильных устройств (touch) ---
+      // Проверяем, поддерживает ли устройство touch
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-      function getCurrentIndex() {
-        const activeDot = Array.from(dots).find(d => d.classList.contains('active'));
-        if (!activeDot) return 0;
-        return mediaList.indexOf(activeDot.dataset.media);
+      if (isTouchDevice) {
+        let startX = 0;
+        let startY = 0;
+        let isSwiping = false;
+        const swipeThreshold = 50; // минимальное расстояние для свайпа
+
+        function handleSwipe(deltaX, deltaY) {
+          if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+            // Горизонтальный свайп
+            const currentActive = Array.from(dots).find(d => d.classList.contains('active'));
+            if (!currentActive) return;
+            const currentIndex = mediaList.indexOf(currentActive.dataset.media);
+            let newIndex;
+            if (deltaX > 0) {
+              // свайп вправо -> предыдущий
+              newIndex = (currentIndex - 1 + mediaList.length) % mediaList.length;
+            } else {
+              // свайп влево -> следующий
+              newIndex = (currentIndex + 1) % mediaList.length;
+            }
+            activateMedia(mediaList[newIndex]);
+          }
+        }
+
+        container.addEventListener('touchstart', (e) => {
+          const touch = e.touches[0];
+          startX = touch.clientX;
+          startY = touch.clientY;
+          isSwiping = true;
+        });
+
+        container.addEventListener('touchmove', (e) => {
+          if (!isSwiping) return;
+          e.preventDefault(); // предотвращаем прокрутку страницы
+        });
+
+        container.addEventListener('touchend', (e) => {
+          if (!isSwiping) return;
+          const touch = e.changedTouches[0];
+          const deltaX = touch.clientX - startX;
+          const deltaY = touch.clientY - startY;
+          handleSwipe(deltaX, deltaY);
+          isSwiping = false;
+        });
+
+        container.addEventListener('touchcancel', () => {
+          isSwiping = false;
+        });
       }
-
-      prevArrow.addEventListener('click', function() {
-        let currentIndex = getCurrentIndex();
-        let newIndex = (currentIndex - 1 + mediaList.length) % mediaList.length;
-        activateMedia(mediaList[newIndex]);
-      });
-
-      nextArrow.addEventListener('click', function() {
-        let currentIndex = getCurrentIndex();
-        let newIndex = (currentIndex + 1) % mediaList.length;
-        activateMedia(mediaList[newIndex]);
-      });
     });
   })();
 </script>

@@ -30,7 +30,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      /* fallback для safe-area */
       padding: 0;
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
@@ -218,7 +217,7 @@
     }
 
     .switch-dot {
-      width: 30px;        /* увеличенная область касания */
+      width: 30px;
       height: 30px;
       display: flex;
       align-items: center;
@@ -401,7 +400,7 @@
 (function() {
   "use strict";
 
-  /* ---------- Генерация звёзд (с debounce при ресайзе) ---------- */
+  /* ---------- Генерация звёзд ---------- */
   const starsContainer = document.querySelector('.stars');
   const card = document.querySelector('.card');
 
@@ -410,7 +409,7 @@
 
     starsContainer.innerHTML = '';
 
-    const starCount = window.innerWidth < 600 ? 15 : 30; // чуть меньше для производительности
+    const starCount = window.innerWidth < 600 ? 15 : 30;
     const rect = card.getBoundingClientRect();
 
     function isInsideCard(xPercent, yPercent) {
@@ -426,7 +425,7 @@
 
     let created = 0;
     let attempts = 0;
-    const maxAttempts = 1000; // увеличено для гарантии
+    const maxAttempts = 1000;
 
     while (created < starCount && attempts < maxAttempts) {
       attempts++;
@@ -461,15 +460,13 @@
     }
   }
 
-  // Генерируем после полной загрузки страницы, чтобы размеры карточки были точными
   window.addEventListener('load', generateStars);
 
-  // Дебаунс для ресайза
   let resizeTimeout;
+  let lastWidth = window.innerWidth;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
-      // Пересоздаём звёзды только если ширина изменилась существенно
       if (Math.abs(window.innerWidth - lastWidth) > 100) {
         lastWidth = window.innerWidth;
         generateStars();
@@ -477,9 +474,7 @@
     }, 200);
   });
 
-  let lastWidth = window.innerWidth;
-
-  /* ---------- Таймер ---------- */
+  /* ---------- Таймер (полный формат: годы, месяцы, дни, часы, минуты, секунды) ---------- */
   function plural(n, one, two, five) {
     n = Math.abs(n) % 100;
     const n1 = n % 10;
@@ -511,11 +506,11 @@
   }
 
   function updateTimer() {
-    const startDate = new Date(2021, 1, 18);
+    const startDate = new Date(2021, 1, 18); // 18 февраля 2021
     const now = new Date();
     const diff = dateDiff(startDate, now);
 
-    let parts = [];
+    const parts = [];
 
     if (diff.years > 0)
       parts.push(diff.years + ' ' + plural(diff.years, 'год', 'года', 'лет'));
@@ -526,11 +521,14 @@
     if (diff.days > 0)
       parts.push(diff.days + ' ' + plural(diff.days, 'день', 'дня', 'дней'));
 
-    parts.push(
-      diff.hours.toString().padStart(2, '0') + ':' +
-      diff.minutes.toString().padStart(2, '0') + ':' +
-      diff.seconds.toString().padStart(2, '0')
-    );
+    if (diff.hours > 0)
+      parts.push(diff.hours + ' ' + plural(diff.hours, 'час', 'часа', 'часов'));
+
+    if (diff.minutes > 0)
+      parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минута', 'минуты', 'минут'));
+
+    // Секунды показываем всегда, чтобы таймер обновлялся
+    parts.push(diff.seconds + ' ' + plural(diff.seconds, 'секунда', 'секунды', 'секунд'));
 
     const timer = document.getElementById('timer');
     if (timer) timer.textContent = parts.join(' ');
@@ -539,7 +537,7 @@
   setInterval(updateTimer, 1000);
   updateTimer();
 
-  /* ---------- Переключение плееров (клики + свайп) ---------- */
+  /* ---------- Переключение плееров ---------- */
   const container = document.getElementById('swipe-container');
   const dots = document.querySelectorAll('.switch-dot');
   const players = {
@@ -558,7 +556,6 @@
     if (players[key]) players[key].classList.add('active');
   }
 
-  // Обработка кликов по точкам
   dots.forEach(dot => {
     dot.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -566,13 +563,13 @@
     });
   });
 
-  // Свайп на мобильных устройствах (всегда вешаем обработчики, но они сработают только при касании)
+  // Свайп (всегда активен, но реагирует только на касания)
   if (container) {
     let touchStartX = 0;
     let touchStartY = 0;
     let touchStartTime = 0;
     const SWIPE_THRESHOLD = 30;
-    const MAX_TIME = 300; // максимальное время свайпа
+    const MAX_TIME = 300;
 
     container.addEventListener('touchstart', (e) => {
       const touch = e.touches[0];
@@ -582,14 +579,13 @@
     }, { passive: true });
 
     container.addEventListener('touchend', (e) => {
-      if (!touchStartX) return; // если не было touchstart
+      if (!touchStartX) return;
 
       const touch = e.changedTouches[0];
       const dx = touch.clientX - touchStartX;
       const dy = touch.clientY - touchStartY;
       const time = Date.now() - touchStartTime;
 
-      // Проверяем, что это горизонтальный свайп (|dx| > |dy|) и длительность не слишком большая
       if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE_THRESHOLD && time < MAX_TIME) {
         const activeDot = [...dots].find(d => d.classList.contains('active'));
         if (!activeDot) return;
@@ -597,16 +593,14 @@
         const index = mediaList.indexOf(activeDot.dataset.media);
         let newIndex;
         if (dx > 0) {
-          // свайп вправо — предыдущий
           newIndex = (index - 1 + mediaList.length) % mediaList.length;
         } else {
-          // свайп влево — следующий
           newIndex = (index + 1) % mediaList.length;
         }
         activateMedia(mediaList[newIndex]);
       }
 
-      touchStartX = 0; // сброс
+      touchStartX = 0;
     }, { passive: true });
   }
 

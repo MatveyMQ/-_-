@@ -110,31 +110,44 @@
       opacity: 0.9;
     }
 
-    .music iframe {
+    /* --- Единый медиа-блок (минимализм) --- */
+    .minimal-media {
+      margin: 20px 0;
+    }
+
+    .media-player {
+      display: none;
+    }
+
+    .media-player.active {
+      display: block;
+    }
+
+    .media-player iframe {
       width: 100%;
-      height: 244px;
       border: none;
       border-radius: 20px;
-      transition: transform 0.4s ease;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
-    .music iframe:hover {
-      transform: scale(1.02);
+    /* Яндекс.Музыка */
+    #player-yandex iframe {
+      height: 244px;
     }
 
+    /* Spotify */
+    #player-spotify iframe {
+      height: 152px;
+    }
+
+    /* YouTube (видео) */
     .video-wrapper {
       position: relative;
       width: 100%;
-      padding-bottom: 56.25%;
+      padding-bottom: 56.25%; /* 16:9 */
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-      transition: transform 0.4s ease;
-    }
-
-    .video-wrapper:hover {
-      transform: scale(1.02);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     .video-wrapper iframe {
@@ -143,7 +156,74 @@
       left: 0;
       width: 100%;
       height: 100%;
-      border: none;
+    }
+
+    /* --- Навигация (стрелки + яркие белые точки) --- */
+    .media-navigation {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .nav-arrow {
+      font-size: 24px;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.2s;
+      line-height: 1;
+      padding: 5px 10px;
+    }
+
+    .nav-arrow:hover {
+      color: white;
+    }
+
+    .media-switch {
+      display: flex;
+      gap: 25px;
+    }
+
+    .switch-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: white;        /* ярко-белые */
+      opacity: 1;               /* полностью непрозрачные */
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); /* лёгкое свечение для контраста */
+      cursor: pointer;
+      transition: all 0.2s ease;
+      padding: 8px;
+      background-clip: content-box;
+      position: relative;
+    }
+
+    /* Подсказка при наведении (на ПК) */
+    .switch-dot:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      white-space: nowrap;
+      margin-bottom: 8px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .switch-dot.active {
+      background: #ff4da6; /* розовая активная */
+      box-shadow: 0 0 12px #ff4da6;
+      transform: scale(1.2);
     }
 
     /* --- Мобильные улучшения --- */
@@ -164,29 +244,37 @@
         line-height: 1.5;
       }
 
-      .music iframe {
-        height: 160px; /* более пропорционально */
+      #player-yandex iframe {
+        height: 160px;
+      }
+
+      #player-spotify iframe {
+        height: 132px;
       }
 
       .glow {
         width: 250px;
         height: 250px;
-        opacity: 0.12; /* очень лёгкое свечение */
+        opacity: 0.12;
       }
 
-      /* отключаем hover-эффекты на тач-экранах */
-      .music iframe:hover,
-      .video-wrapper:hover {
-        transform: none;
+      .media-navigation {
+        gap: 15px;
       }
 
-      /* добавляем немного воздуха между блоками */
-      .music {
-        margin-bottom: 20px;
+      .nav-arrow {
+        font-size: 28px;
+        padding: 8px 12px;
       }
 
-      .video-wrapper {
-        margin-top: 10px;
+      .switch-dot {
+        width: 18px;
+        height: 18px;
+        padding: 10px;
+      }
+
+      .switch-dot:hover::after {
+        display: none;
       }
     }
   </style>
@@ -206,32 +294,61 @@
       Ты — самое светлое, что есть в моей жизни.
     </p>
 
-    <div class="music fade delay2">
-      <iframe 
-        title="Плейлист с музыкой на Яндекс.Музыке"
-        src="https://music.yandex.ru/iframe/album/27015943/track/116515817"
-        allow="autoplay; clipboard-write"
-        loading="lazy">
-      </iframe>
-    </div>
+    <!-- Единый медиа-блок: Яндекс.Музыка, Spotify, YouTube -->
+    <div class="minimal-media fade delay2">
+      <!-- Яндекс.Музыка (активна по умолчанию) -->
+      <div class="media-player active" id="player-yandex">
+        <iframe 
+          title="Плейлист с музыкой на Яндекс.Музыке"
+          src="https://music.yandex.ru/iframe/album/27015943/track/116515817"
+          allow="autoplay; clipboard-write"
+          loading="lazy">
+        </iframe>
+      </div>
 
-    <br><br>
+      <!-- Spotify (с вашим ID трека) -->
+      <div class="media-player" id="player-spotify">
+        <iframe 
+          style="border-radius:12px"
+          src="https://open.spotify.com/embed/track/6NGzHs6RPPbK40ET9YX7V4?utm_source=generator&theme=0"
+          width="100%"
+          height="152"
+          frameBorder="0"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy">
+        </iframe>
+      </div>
 
-    <div class="video-wrapper fade delay3">
-      <iframe 
-        title="Видеопоздравление на YouTube"
-        src="https://www.youtube.com/embed/AZ1psyyKmMY"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-        loading="lazy">
-      </iframe>
+      <!-- YouTube (видео) -->
+      <div class="media-player" id="player-youtube">
+        <div class="video-wrapper">
+          <iframe 
+            title="Видеопоздравление на YouTube"
+            src="https://www.youtube.com/embed/AZ1psyyKmMY"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy">
+          </iframe>
+        </div>
+      </div>
+
+      <!-- Навигация: стрелки + яркие белые точки -->
+      <div class="media-navigation">
+        <span class="nav-arrow" id="arrow-prev">←</span>
+        <div class="media-switch">
+          <span class="switch-dot active" data-media="yandex" data-tooltip="Яндекс.Музыка"></span>
+          <span class="switch-dot" data-media="spotify" data-tooltip="Spotify"></span>
+          <span class="switch-dot" data-media="youtube" data-tooltip="YouTube"></span>
+        </div>
+        <span class="nav-arrow" id="arrow-next">→</span>
+      </div>
     </div>
   </div>
 </div>
 
 <script>
   (function() {
-    // --- Утилита debounce ---
+    // --- Звёзды (с debounce и адаптацией под мобильные) ---
     function debounce(func, wait) {
       let timeout;
       return function executedFunction(...args) {
@@ -244,19 +361,14 @@
       };
     }
 
-    // --- Генерация звёзд ---
     function generateStars() {
       const starsContainer = document.querySelector('.stars');
       const card = document.querySelector('.card');
       if (!starsContainer || !card) return;
 
-      // Очищаем контейнер
       starsContainer.innerHTML = '';
 
-      // Определяем количество звёзд в зависимости от ширины экрана
       const starCount = window.innerWidth < 600 ? 30 : 50;
-
-      // Получаем актуальные размеры и позицию карточки
       const rect = card.getBoundingClientRect();
       const safeArea = {
         left: rect.left,
@@ -267,7 +379,6 @@
         height: window.innerHeight
       };
 
-      // Функция проверки, попадает ли точка (в процентах) в карточку
       function isInsideCard(xPercent, yPercent) {
         const x = (xPercent / 100) * safeArea.width;
         const y = (yPercent / 100) * safeArea.height;
@@ -276,33 +387,26 @@
       }
 
       let starsCreated = 0;
-      const maxAttempts = 500; // защита от бесконечного цикла
+      const maxAttempts = 500;
       let attempts = 0;
 
       while (starsCreated < starCount && attempts < maxAttempts) {
         attempts++;
 
-        // Случайные координаты в процентах
         const x = Math.random() * 100;
         const y = Math.random() * 100;
 
-        // Если точка внутри карточки — пропускаем
-        if (isInsideCard(x, y)) {
-          continue;
-        }
+        if (isInsideCard(x, y)) continue;
 
-        // Создаём звезду
         const star = document.createElement('div');
         star.classList.add('star');
 
-        const size = Math.random() * 10 + 6; // от 6 до 16px
+        const size = Math.random() * 10 + 6;
         star.style.width = size + 'px';
         star.style.height = size + 'px';
-
         star.style.left = x + '%';
         star.style.top = y + '%';
-
-        star.style.animationDuration = (Math.random() * 4 + 4) + 's'; // 4-8 сек
+        star.style.animationDuration = (Math.random() * 4 + 4) + 's';
         star.style.animationDelay = (Math.random() * 5) + 's';
 
         star.innerHTML = `
@@ -311,7 +415,6 @@
           </svg>
         `;
 
-        // Иногда делаем звезду розовой
         if (Math.random() > 0.75) {
           star.querySelector('svg').style.fill = '#ff4da6';
         }
@@ -321,11 +424,62 @@
       }
     }
 
-    // --- Запуск при загрузке ---
     document.addEventListener('DOMContentLoaded', generateStars);
-
-    // --- Перезапуск при изменении размера окна (с debounce) ---
     window.addEventListener('resize', debounce(generateStars, 150));
+
+    // --- Логика переключения для трёх плееров (точки + стрелки) ---
+    document.addEventListener('DOMContentLoaded', function() {
+      const dots = document.querySelectorAll('.switch-dot');
+      const players = {
+        yandex: document.getElementById('player-yandex'),
+        spotify: document.getElementById('player-spotify'),
+        youtube: document.getElementById('player-youtube')
+      };
+      const mediaList = ['yandex', 'spotify', 'youtube'];
+
+      // Функция активации плеера по ключу
+      function activateMedia(mediaKey) {
+        dots.forEach(d => d.classList.remove('active'));
+        Object.values(players).forEach(p => p?.classList.remove('active'));
+
+        const targetDot = Array.from(dots).find(d => d.dataset.media === mediaKey);
+        if (targetDot) targetDot.classList.add('active');
+
+        if (players[mediaKey]) {
+          players[mediaKey].classList.add('active');
+        }
+      }
+
+      // Клик по точкам
+      dots.forEach(dot => {
+        dot.addEventListener('click', function() {
+          const media = this.dataset.media;
+          activateMedia(media);
+        });
+      });
+
+      // Стрелки
+      const prevArrow = document.getElementById('arrow-prev');
+      const nextArrow = document.getElementById('arrow-next');
+
+      function getCurrentIndex() {
+        const activeDot = Array.from(dots).find(d => d.classList.contains('active'));
+        if (!activeDot) return 0;
+        return mediaList.indexOf(activeDot.dataset.media);
+      }
+
+      prevArrow.addEventListener('click', function() {
+        let currentIndex = getCurrentIndex();
+        let newIndex = (currentIndex - 1 + mediaList.length) % mediaList.length;
+        activateMedia(mediaList[newIndex]);
+      });
+
+      nextArrow.addEventListener('click', function() {
+        let currentIndex = getCurrentIndex();
+        let newIndex = (currentIndex + 1) % mediaList.length;
+        activateMedia(mediaList[newIndex]);
+      });
+    });
   })();
 </script>
 </body>

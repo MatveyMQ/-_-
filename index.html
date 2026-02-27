@@ -37,7 +37,6 @@
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
-    /* Звёзды — статичные белые точки */
     .stars {
       position: fixed;
       top: 0;
@@ -58,7 +57,6 @@
       z-index: 1;
     }
 
-    /* Свечение */
     .glow {
       position: absolute;
       top: 50%;
@@ -183,7 +181,6 @@
       border: none;
     }
 
-    /* Fallback для мобильных — только кнопка */
     .yandex-fallback {
       display: none;
       width: 100%;
@@ -211,7 +208,6 @@
       background: #ff7ab9;
     }
 
-    /* На мобильных показываем кнопку, скрываем iframe */
     @media (max-width: 600px) {
       .yandex-container {
         display: none;
@@ -287,7 +283,6 @@
       z-index: 10;
     }
 
-    /* Адаптация для мобильных */
     @media (max-width: 700px) {
       .card {
         padding: 40px 30px;
@@ -369,7 +364,6 @@
     </p>
 
     <div class="minimal-media fade delay3">
-      <!-- Яндекс.Музыка: на десктопе iframe, на мобильных кнопка -->
       <div class="media-player" id="player-yandex">
         <div class="yandex-container">
           <iframe 
@@ -385,7 +379,7 @@
         </div>
       </div>
 
-      <!-- YouTube -->
+
       <div class="media-player" id="player-youtube">
         <div class="video-container">
           <iframe 
@@ -398,7 +392,7 @@
         </div>
       </div>
 
-      <!-- Точки навигации -->
+
       <div class="media-switch">
         <span class="switch-dot" data-media="yandex" data-tooltip="Яндекс.Музыка"></span>
         <span class="switch-dot" data-media="youtube" data-tooltip="YouTube"></span>
@@ -411,7 +405,7 @@
 (function() {
   "use strict";
 
-  /* ---------- Звёзды (только для десктопа, статичные) ---------- */
+
   function generateStars() {
     const starsContainer = document.querySelector('.stars');
     const card = document.querySelector('.card');
@@ -459,7 +453,7 @@
 
   window.addEventListener('load', generateStars);
 
-  /* ---------- Таймер ---------- */
+
   function plural(n, one, two, five) {
     n = Math.abs(n) % 100;
     const n1 = n % 10;
@@ -516,7 +510,6 @@
   setInterval(updateTimer, 1000);
   updateTimer();
 
-  /* ---------- Переключение плееров по клику ---------- */
   const dots = document.querySelectorAll('.switch-dot');
   const players = {
     yandex: document.getElementById('player-yandex'),
@@ -539,24 +532,20 @@
     });
   });
 
-  // Определяем мобильность для начального выбора
   function detectMobile() {
     return window.innerWidth <= 600 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   }
 
-  // При загрузке включаем YouTube на мобильных, Яндекс на десктопе
   if (detectMobile()) {
     activateMedia('youtube');
   } else {
     activateMedia('yandex');
   }
 
-  // Обработка клика по кнопке "Слушать в Яндекс.Музыке" — открываем веб-версию без системного диалога
   const yandexLink = document.getElementById('yandex-music-link');
   if (yandexLink) {
     yandexLink.addEventListener('click', (e) => {
       e.preventDefault();
-      // Открываем веб-версию трека в новой вкладке — системный диалог не появляется
       window.open('https://music.yandex.ru/album/27015943/track/116515817', '_blank');
     });
   }

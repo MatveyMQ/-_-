@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="color-scheme" content="dark only"> <!-- принудительно тёмная схема -->
+  <meta name="color-scheme" content="dark only">
   <title>С 8 Марта 🌷</title>
   <style>
     * {
@@ -13,19 +13,19 @@
     }
 
     html {
-      background: #0f172a; /* fallback */
+      background: #0f172a;
     }
 
     html, body {
       width: 100%;
       min-height: 100vh;
       min-height: 100dvh;
-      background-color: #000; /* абсолютно черный фон (резерв) */
-      background-image: radial-gradient(circle at top, #1a1a1a, #000); /* градиент поверх */
+      background-color: #000;
+      background-image: radial-gradient(circle at top, #1a1a1a, #000);
       color: #fff;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       overflow-x: hidden;
-      color-scheme: dark; /* дополнительно указываем тёмную схему */
+      color-scheme: dark;
     }
 
     body {
@@ -37,7 +37,6 @@
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
-    /* Звезды */
     .stars {
       position: fixed;
       top: 0;
@@ -69,7 +68,6 @@
       100% { opacity: 0; transform: scale(0.8); }
     }
 
-    /* Свечение — центрировано */
     .glow {
       position: absolute;
       top: 50%;
@@ -260,7 +258,6 @@
       z-index: 10;
     }
 
-    /* Оптимизация для мобильных */
     @media (max-width: 700px) {
       .card {
         padding: 40px 30px;
@@ -297,7 +294,7 @@
         display: none;
       }
       .stars {
-        display: none; /* на мобильных убираем звезды для производительности */
+        display: none;
       }
     }
 
@@ -342,7 +339,7 @@
     </p>
 
     <div class="minimal-media fade delay3" id="swipe-container">
-      <!-- Яндекс.Музыка (iframe с улучшенными атрибутами) -->
+      <!-- Яндекс.Музыка (iframe на десктопе, на мобильных не активируется) -->
       <div class="media-player" id="player-yandex">
         <div class="yandex-container">
           <iframe 
@@ -355,7 +352,7 @@
         </div>
       </div>
 
-      <!-- YouTube (рабочий на мобильных) -->
+      <!-- YouTube (работает везде) -->
       <div class="media-player" id="player-youtube">
         <div class="video-container">
           <iframe 
@@ -368,7 +365,7 @@
         </div>
       </div>
 
-      <!-- Точки навигации -->
+      <!-- Точки навигации (только клик) -->
       <div class="media-switch">
         <span class="switch-dot" data-media="yandex" data-tooltip="Яндекс.Музыка"></span>
         <span class="switch-dot" data-media="youtube" data-tooltip="YouTube"></span>
@@ -381,7 +378,7 @@
 (function() {
   "use strict";
 
-  /* ---------- Звезды (упрощённо, только для десктопа) ---------- */
+  /* ---------- Звезды (только для десктопа) ---------- */
   function generateStars() {
     const starsContainer = document.querySelector('.stars');
     const card = document.querySelector('.card');
@@ -478,8 +475,8 @@
     if (diff.hours > 0)
       parts.push(diff.hours + ' ' + plural(diff.hours, 'час', 'часа', 'часов'));
     if (diff.minutes > 0)
-      parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минуту', 'минуты', 'минут'));
-    parts.push(diff.seconds + ' ' + plural(diff.seconds, 'секунду', 'секунды', 'секунд'));
+      parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минута', 'минуты', 'минут'));
+    parts.push(diff.seconds + ' ' + plural(diff.seconds, 'секунда', 'секунды', 'секунд'));
 
     const timer = document.getElementById('timer');
     if (timer) timer.textContent = parts.join(' ');
@@ -488,8 +485,7 @@
   setInterval(updateTimer, 1000);
   updateTimer();
 
-  /* ---------- Переключение плееров с учётом мобильных ---------- */
-  const container = document.getElementById('swipe-container');
+  /* ---------- Переключение плееров по клику (свайпы удалены) ---------- */
   const dots = document.querySelectorAll('.switch-dot');
   const players = {
     yandex: document.getElementById('player-yandex'),
@@ -502,6 +498,11 @@
   }
 
   function activateMedia(key) {
+    // На мобильных не активируем Яндекс (вместо этого будет открыт внешний переход)
+    if (key === 'yandex' && detectMobile()) {
+      openYandexMusic();
+      return;
+    }
     dots.forEach(d => d.classList.remove('active'));
     Object.values(players).forEach(p => p && p.classList.remove('active'));
 
@@ -510,54 +511,32 @@
     if (players[key]) players[key].classList.add('active');
   }
 
+  function openYandexMusic() {
+    // Пытаемся открыть приложение, если не получается – открываем веб-версию
+    window.location.href = 'yandexmusic://track/116515817';
+    // Резервный вариант через секунду (если приложение не открылось)
+    setTimeout(() => {
+      window.open('https://music.yandex.ru/album/27015943/track/116515817', '_blank');
+    }, 500);
+  }
+
   dots.forEach(dot => {
     dot.addEventListener('click', (e) => {
       e.stopPropagation();
-      activateMedia(dot.dataset.media);
+      const media = dot.dataset.media;
+      if (media === 'yandex' && detectMobile()) {
+        openYandexMusic();
+      } else {
+        activateMedia(media);
+      }
     });
   });
 
-  // Принудительно включаем YouTube на мобильных, иначе Яндекс (как задумано)
+  // При загрузке включаем YouTube на мобильных, Яндекс на десктопе
   if (detectMobile()) {
     activateMedia('youtube');
   } else {
     activateMedia('yandex');
-  }
-
-  // Свайп
-  if (container) {
-    let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
-    const SWIPE_THRESHOLD = 30;
-    const MAX_TIME = 300;
-
-    container.addEventListener('touchstart', (e) => {
-      const touch = e.touches[0];
-      touchStartX = touch.clientX;
-      touchStartY = touch.clientY;
-      touchStartTime = Date.now();
-    }, { passive: true });
-
-    container.addEventListener('touchend', (e) => {
-      if (!touchStartX) return;
-
-      const touch = e.changedTouches[0];
-      const dx = touch.clientX - touchStartX;
-      const dy = touch.clientY - touchStartY;
-      const time = Date.now() - touchStartTime;
-
-      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE_THRESHOLD && time < MAX_TIME) {
-        const activeDot = [...dots].find(d => d.classList.contains('active'));
-        if (!activeDot) return;
-
-        const index = mediaList.indexOf(activeDot.dataset.media);
-        const newIndex = dx > 0
-          ? (index - 1 + mediaList.length) % mediaList.length
-          : (index + 1) % mediaList.length;
-        activateMedia(mediaList[newIndex]);
-      }
-
-      touchStartX = 0;
-    }, { passive: true });
   }
 
 })();

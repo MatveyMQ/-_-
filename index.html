@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="color-scheme" content="dark only"> <!-- принудительно тёмная схема -->
   <title>С 8 Марта 🌷</title>
   <style>
-    /* Стили остаются без изменений (как в предыдущей версии) */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -13,19 +13,20 @@
     }
 
     html {
-      background: #0f172a;
+      background: #0f172a; /* fallback */
     }
 
     html, body {
-  width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
-  background: #000; /* резервный черный фон */
-  background: radial-gradient(circle at top, #1a1a1a, #000); /* градиент поверх */
-  color: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  overflow-x: hidden;
-}
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      background-color: #000; /* абсолютно черный фон (резерв) */
+      background-image: radial-gradient(circle at top, #1a1a1a, #000); /* градиент поверх */
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow-x: hidden;
+      color-scheme: dark; /* дополнительно указываем тёмную схему */
+    }
 
     body {
       position: relative;
@@ -36,6 +37,7 @@
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
+    /* Звезды */
     .stars {
       position: fixed;
       top: 0;
@@ -67,6 +69,7 @@
       100% { opacity: 0; transform: scale(0.8); }
     }
 
+    /* Свечение — центрировано */
     .glow {
       position: absolute;
       top: 50%;
@@ -257,6 +260,7 @@
       z-index: 10;
     }
 
+    /* Оптимизация для мобильных */
     @media (max-width: 700px) {
       .card {
         padding: 40px 30px;
@@ -293,7 +297,7 @@
         display: none;
       }
       .stars {
-        display: none;
+        display: none; /* на мобильных убираем звезды для производительности */
       }
     }
 
@@ -377,7 +381,7 @@
 (function() {
   "use strict";
 
-  /* ---------- Звезды (упрощённо) ---------- */
+  /* ---------- Звезды (упрощённо, только для десктопа) ---------- */
   function generateStars() {
     const starsContainer = document.querySelector('.stars');
     const card = document.querySelector('.card');
@@ -474,8 +478,8 @@
     if (diff.hours > 0)
       parts.push(diff.hours + ' ' + plural(diff.hours, 'час', 'часа', 'часов'));
     if (diff.minutes > 0)
-      parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минута', 'минуты', 'минут'));
-    parts.push(diff.seconds + ' ' + plural(diff.seconds, 'секунда', 'секунды', 'секунд'));
+      parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минуту', 'минуты', 'минут'));
+    parts.push(diff.seconds + ' ' + plural(diff.seconds, 'секунду', 'секунды', 'секунд'));
 
     const timer = document.getElementById('timer');
     if (timer) timer.textContent = parts.join(' ');

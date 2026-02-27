@@ -142,8 +142,9 @@
       justify-content: center;
       align-items: center;
     }
-    /* Стили для виджета Яндекс.Музыки */
-    .yandex-widget {
+    /* Общий контейнер для плееров с сохранением пропорций */
+    .yandex-widget,
+    .video-wrapper {
       position: relative;
       width: 100%;
       max-width: 614px;
@@ -153,23 +154,23 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       background: rgba(0, 0, 0, 0.2);
     }
-    .yandex-widget iframe {
-      display: block;
-      width: 100%;
-      height: 244px;
-      border: none;
-      background: transparent;
+    /* Яндекс.Музыка: соотношение 614/244 ≈ 2.516 → высота = 39.7% от ширины */
+    .yandex-widget {
+      padding-bottom: 39.7%; /* 244/614 * 100% */
+      height: 0;
     }
-    /* Стили для YouTube */
-    .video-wrapper {
-      position: relative;
+    .yandex-widget iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      max-width: 614px;
-      margin: 0 auto;
-      padding-bottom: 56.25%; /* 16:9 */
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      height: 100%;
+      border: none;
+    }
+    /* YouTube: стандартное соотношение 16:9 */
+    .video-wrapper {
+      padding-bottom: 56.25%; /* 9/16 * 100% */
+      height: 0;
     }
     .video-wrapper iframe {
       position: absolute;
@@ -219,52 +220,32 @@
       box-shadow: 0 0 12px #ff4da6;
       transform: scale(1.2);
     }
-    /* Адаптация для мобильных */
-    @media (max-width: 700px) {
-      .yandex-widget iframe {
-        height: 200px;
-      }
-    }
-    @media (max-width: 600px) {
-      .main {
-        padding: 10px;
-      }
+    /* Дополнительная адаптация для очень маленьких экранов */
+    @media (max-width: 480px) {
       .card {
-        padding: 30px 16px;
-        border-radius: 24px;
+        padding: 30px 12px;
       }
       h1 {
-        font-size: 24px;
-        margin-bottom: 16px;
+        font-size: 22px;
       }
       p {
-        font-size: 15px;
-        margin-bottom: 30px;
-        line-height: 1.5;
+        font-size: 14px;
       }
       .timer {
-        font-size: 20px;
-      }
-      .glow {
-        width: 250px;
-        height: 250px;
-        opacity: 0.12;
+        font-size: 18px;
       }
       .switch-dot {
-        width: 18px;
-        height: 18px;
-        padding: 10px;
-      }
-      .switch-dot:hover::after {
-        display: none;
-      }
-      .yandex-widget iframe {
-        height: 180px;
+        width: 20px;
+        height: 20px;
+        padding: 8px;
       }
     }
-    @media (max-width: 400px) {
-      .yandex-widget iframe {
-        height: 150px;
+    @media (max-width: 360px) {
+      .card {
+        padding: 20px 10px;
+      }
+      h1 {
+        font-size: 20px;
       }
     }
   </style>
@@ -294,14 +275,14 @@
     </p>
 
     <div class="minimal-media fade delay3" id="swipe-container">
-      <!-- Яндекс.Музыка - виджет iframe -->
+      <!-- Яндекс.Музыка - виджет iframe с адаптивными пропорциями -->
       <div class="media-player active" id="player-yandex">
         <div class="yandex-widget">
           <iframe 
             frameborder="0" 
             allow="clipboard-write" 
-            style="border:none; width:100%; height:244px;" 
-            src="https://music.yandex.ru/iframe/album/27015943/track/116515817">
+            src="https://music.yandex.ru/iframe/album/27015943/track/116515817"
+            title="Яндекс.Музыка">
             Слушайте <a href="https://music.yandex.ru/album/27015943/track/116515817?utm_source=web&utm_medium=copy_link">твоими глазами</a> — <a href="https://music.yandex.ru/artist/6487554">cold carti</a> на Яндекс Музыке
           </iframe>
         </div>

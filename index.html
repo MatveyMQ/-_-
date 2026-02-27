@@ -91,7 +91,7 @@
     
     /* Основной контейнер */
     .main {
-      min-height: 100vh;           /* будет проигнорирован из-за body flex, оставлено для обратной совместимости */
+      min-height: 100vh;
       width: 100%;
       display: flex;
       justify-content: center;
@@ -105,6 +105,7 @@
     .card {
       position: relative;
       background: rgba(255, 255, 255, 0.06);
+      /* На мобильных отключаем тяжёлый backdrop-filter для производительности */
       backdrop-filter: blur(30px);
       border-radius: 40px;
       padding: 60px 40px;
@@ -269,14 +270,23 @@
       transform: scale(1.2);
     }
     
-    /* Мобильная адаптация */
+    /* Оптимизация для мобильных: меньше звезд, отключаем тяжелые эффекты */
     @media (max-width: 700px) {
       .card {
         padding: 40px 30px;
+        /* Убираем backdrop-filter для производительности */
+        backdrop-filter: none;
+        background: rgba(20, 20, 30, 0.8);
       }
       
       .yandex-container iframe {
         min-height: 180px;
+      }
+      
+      /* Уменьшаем интенсивность свечения */
+      .glow {
+        opacity: 0.15;
+        filter: blur(80px);
       }
     }
     
@@ -309,6 +319,7 @@
         width: 250px;
         height: 250px;
         opacity: 0.12;
+        filter: blur(60px);
       }
       
       .switch-dot {
@@ -387,7 +398,8 @@
             frameborder="0" 
             allow="clipboard-write" 
             src="https://music.yandex.ru/iframe/album/27015943/track/116515817"
-            title="Яндекс.Музыка">
+            title="Яндекс.Музыка"
+            loading="lazy">
           </iframe>
         </div>
       </div>
@@ -417,18 +429,7 @@
 <script>
 (function() {
   /* =======================
-     Debounce
-  ======================== */
-  function debounce(func, wait) {
-    let timeout;
-    return function(...args) {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func(...args), wait);
-    };
-  }
-
-  /* =======================
-     Генерация звёзд
+     Оптимизированная генерация звёзд (только при загрузке и ориентации)
   ======================== */
   function generateStars() {
     const starsContainer = document.querySelector('.stars');
@@ -437,7 +438,8 @@
 
     starsContainer.innerHTML = '';
 
-    const starCount = window.innerWidth < 600 ? 30 : 50;
+    // Меньше звезд на мобильных
+    const starCount = window.innerWidth < 600 ? 20 : 40;
     const rect = card.getBoundingClientRect();
 
     function isInsideCard(xPercent, yPercent) {
@@ -453,8 +455,9 @@
 
     let created = 0;
     let attempts = 0;
+    const maxAttempts = 300; // снижаем попытки для производительности
 
-    while (created < starCount && attempts < 500) {
+    while (created < starCount && attempts < maxAttempts) {
       attempts++;
 
       const x = Math.random() * 100;
@@ -464,7 +467,7 @@
       const star = document.createElement('div');
       star.className = 'star';
 
-      const size = Math.random() * 10 + 6;
+      const size = Math.random() * 8 + 4; // чуть меньше звёзды
       star.style.width = size + 'px';
       star.style.height = size + 'px';
       star.style.left = x + '%';
@@ -487,8 +490,22 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded', generateStars);
-  window.addEventListener('resize', debounce(generateStars, 150));
+  // Генерируем звёзды один раз после загрузки страницы
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', generateStars);
+  } else {
+    generateStars();
+  }
+
+  // При повороте экрана генерируем заново, но с задержкой и только если изменилась ориентация
+  let lastWidth = window.innerWidth;
+  window.addEventListener('resize', () => {
+    // Если ширина изменилась существенно (поворот), обновляем звёзды
+    if (Math.abs(window.innerWidth - lastWidth) > 100) {
+      lastWidth = window.innerWidth;
+      setTimeout(generateStars, 200);
+    }
+  });
 
   /* =======================
      Таймер (более точный)

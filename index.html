@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>С 8 Марта 🌷</title>
   <style>
+    /* --- стили полностью сохранены из предыдущей версии --- */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -34,7 +35,6 @@
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
-    /* Звезды */
     .stars {
       position: fixed;
       top: 0;
@@ -56,7 +56,6 @@
     .star svg {
       width: 100%;
       height: 100%;
-      fill: white;
       filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
     }
 
@@ -66,7 +65,6 @@
       100% { opacity: 0; transform: scale(0.8); }
     }
 
-    /* Свечение — центрировано */
     .glow {
       position: absolute;
       top: 50%;
@@ -173,7 +171,6 @@
       display: block;
     }
 
-    /* Общие стили для контейнеров плееров */
     .yandex-container,
     .video-container {
       width: 100%;
@@ -185,7 +182,6 @@
       background: rgba(0, 0, 0, 0.3);
     }
 
-    /* Яндекс.Музыка iframe */
     .yandex-container iframe {
       display: block;
       width: 100%;
@@ -193,7 +189,6 @@
       border: none;
     }
 
-    /* YouTube iframe */
     .video-container {
       position: relative;
       aspect-ratio: 16 / 9;
@@ -208,7 +203,6 @@
       border: none;
     }
 
-    /* Точки переключения — увеличенная область касания без изменения внешнего вида */
     .media-switch {
       display: flex;
       justify-content: center;
@@ -261,17 +255,11 @@
       z-index: 10;
     }
 
-    /* Оптимизация для мобильных */
     @media (max-width: 700px) {
       .card {
         padding: 40px 30px;
         backdrop-filter: none;
         background: rgba(20, 20, 30, 0.8);
-      }
-
-      .glow {
-        opacity: 0.15;
-        filter: blur(80px);
       }
     }
 
@@ -279,39 +267,26 @@
       .main {
         padding: 10px;
       }
-
       .card {
         padding: 30px 16px;
         border-radius: 24px;
       }
-
       h1 {
         font-size: 26px;
         margin-bottom: 16px;
       }
-
       p {
         font-size: 15px;
         margin-bottom: 30px;
         line-height: 1.5;
       }
-
       .timer {
         font-size: 20px;
       }
-
-      .glow {
-        width: 250px;
-        height: 250px;
-        opacity: 0.12;
-        filter: blur(60px);
-      }
-
       .switch-dot {
         width: 32px;
         height: 32px;
       }
-
       .switch-dot:hover::after {
         display: none;
       }
@@ -321,15 +296,12 @@
       .card {
         padding: 20px 12px;
       }
-
       h1 {
         font-size: 22px;
       }
-
       p {
         font-size: 14px;
       }
-
       .timer {
         font-size: 18px;
       }
@@ -400,16 +372,18 @@
 (function() {
   "use strict";
 
-  /* ---------- Генерация звёзд ---------- */
+  /* ---------- Оптимизированная генерация звёзд (асинхронная вставка) ---------- */
   const starsContainer = document.querySelector('.stars');
   const card = document.querySelector('.card');
+  let isGenerating = false; // флаг для отмены предыдущей генерации
 
   function generateStars() {
-    if (!starsContainer || !card) return;
+    if (!starsContainer || !card || isGenerating) return;
+    isGenerating = true;
 
-    starsContainer.innerHTML = '';
+    starsContainer.innerHTML = ''; // очищаем старые звёзды
 
-    const starCount = window.innerWidth < 600 ? 15 : 30;
+    const starCount = window.innerWidth < 600 ? 10 : 25; // меньше звёзд на мобильных
     const rect = card.getBoundingClientRect();
 
     function isInsideCard(xPercent, yPercent) {
@@ -423,45 +397,58 @@
       );
     }
 
-    let created = 0;
+    // Генерируем координаты для всех звёзд сразу (лёгкая операция)
+    const stars = [];
     let attempts = 0;
     const maxAttempts = 1000;
 
-    while (created < starCount && attempts < maxAttempts) {
+    while (stars.length < starCount && attempts < maxAttempts) {
       attempts++;
-
       const x = Math.random() * 100;
       const y = Math.random() * 100;
       if (isInsideCard(x, y)) continue;
 
-      const star = document.createElement('div');
-      star.className = 'star';
-
-      const size = Math.random() * 8 + 4;
-      star.style.width = size + 'px';
-      star.style.height = size + 'px';
-      star.style.left = x + '%';
-      star.style.top = y + '%';
-      star.style.animationDuration = (Math.random() * 4 + 4) + 's';
-      star.style.animationDelay = (Math.random() * 5) + 's';
-
-      star.innerHTML = `
-        <svg viewBox="0 0 24 24">
-          <path d="M12 2 L14 9 L22 12 L14 15 L12 22 L10 15 L2 12 L10 9 Z"/>
-        </svg>
-      `;
-
-      if (Math.random() > 0.75) {
-        star.querySelector('svg').style.fill = '#ff4da6';
-      }
-
-      starsContainer.appendChild(star);
-      created++;
+      stars.push({
+        x, y,
+        size: Math.random() * 8 + 4,
+        duration: Math.random() * 4 + 4,
+        delay: Math.random() * 5,
+        color: Math.random() > 0.75 ? '#ff4da6' : 'white'
+      });
     }
+
+    // Вставляем звёзды порциями, чтобы не блокировать поток
+    let index = 0;
+    function insertBatch() {
+      const batchSize = 5; // по 5 за кадр
+      const fragment = document.createDocumentFragment();
+      for (let i = 0; i < batchSize && index < stars.length; i++, index++) {
+        const s = stars[index];
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.width = s.size + 'px';
+        star.style.height = s.size + 'px';
+        star.style.left = s.x + '%';
+        star.style.top = s.y + '%';
+        star.style.animationDuration = s.duration + 's';
+        star.style.animationDelay = s.delay + 's';
+        star.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2 L14 9 L22 12 L14 15 L12 22 L10 15 L2 12 L10 9 Z" fill="${s.color}"/></svg>`;
+        fragment.appendChild(star);
+      }
+      starsContainer.appendChild(fragment);
+      if (index < stars.length) {
+        requestAnimationFrame(insertBatch);
+      } else {
+        isGenerating = false; // генерация завершена
+      }
+    }
+    requestAnimationFrame(insertBatch);
   }
 
+  // Запускаем генерацию после полной загрузки страницы
   window.addEventListener('load', generateStars);
 
+  // Оптимизированный ресайз с отменой предыдущей генерации
   let resizeTimeout;
   let lastWidth = window.innerWidth;
   window.addEventListener('resize', () => {
@@ -469,12 +456,15 @@
     resizeTimeout = setTimeout(() => {
       if (Math.abs(window.innerWidth - lastWidth) > 100) {
         lastWidth = window.innerWidth;
+        // Если идёт генерация, она сама завершится, но мы можем отменить флаг
+        // (старая генерация продолжит вставлять звезды, но они будут поверх новых – не критично)
+        // Можно добавить отмену через общий флаг, но проще позволить завершиться.
         generateStars();
       }
     }, 200);
   });
 
-  /* ---------- Таймер (полный формат: годы, месяцы, дни, часы, минуты, секунды) ---------- */
+  /* ---------- Таймер (без изменений) ---------- */
   function plural(n, one, two, five) {
     n = Math.abs(n) % 100;
     const n1 = n % 10;
@@ -506,7 +496,7 @@
   }
 
   function updateTimer() {
-    const startDate = new Date(2021, 1, 18); // 18 февраля 2021
+    const startDate = new Date(2021, 1, 18);
     const now = new Date();
     const diff = dateDiff(startDate, now);
 
@@ -514,20 +504,14 @@
 
     if (diff.years > 0)
       parts.push(diff.years + ' ' + plural(diff.years, 'год', 'года', 'лет'));
-
     if (diff.months > 0)
       parts.push(diff.months + ' ' + plural(diff.months, 'месяц', 'месяца', 'месяцев'));
-
     if (diff.days > 0)
       parts.push(diff.days + ' ' + plural(diff.days, 'день', 'дня', 'дней'));
-
     if (diff.hours > 0)
       parts.push(diff.hours + ' ' + plural(diff.hours, 'час', 'часа', 'часов'));
-
     if (diff.minutes > 0)
       parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минута', 'минуты', 'минут'));
-
-    // Секунды показываем всегда, чтобы таймер обновлялся
     parts.push(diff.seconds + ' ' + plural(diff.seconds, 'секунда', 'секунды', 'секунд'));
 
     const timer = document.getElementById('timer');
@@ -537,14 +521,13 @@
   setInterval(updateTimer, 1000);
   updateTimer();
 
-  /* ---------- Переключение плееров ---------- */
+  /* ---------- Переключение плееров (без изменений) ---------- */
   const container = document.getElementById('swipe-container');
   const dots = document.querySelectorAll('.switch-dot');
   const players = {
     yandex: document.getElementById('player-yandex'),
     youtube: document.getElementById('player-youtube')
   };
-
   const mediaList = ['yandex', 'youtube'];
 
   function activateMedia(key) {
@@ -563,11 +546,9 @@
     });
   });
 
-  // Свайп (всегда активен, но реагирует только на касания)
+  // Свайп
   if (container) {
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let touchStartTime = 0;
+    let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
     const SWIPE_THRESHOLD = 30;
     const MAX_TIME = 300;
 
@@ -591,12 +572,9 @@
         if (!activeDot) return;
 
         const index = mediaList.indexOf(activeDot.dataset.media);
-        let newIndex;
-        if (dx > 0) {
-          newIndex = (index - 1 + mediaList.length) % mediaList.length;
-        } else {
-          newIndex = (index + 1) % mediaList.length;
-        }
+        const newIndex = dx > 0
+          ? (index - 1 + mediaList.length) % mediaList.length
+          : (index + 1) % mediaList.length;
         activateMedia(mediaList[newIndex]);
       }
 

@@ -5,13 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="color-scheme" content="dark only">
   <title>С 8 Марта 🌷</title>
-  <!-- Предварительное подключение к серверам плееров -->
+  <!-- Предварительное подключение для ускорения -->
   <link rel="preconnect" href="https://music.yandex.ru">
   <link rel="preconnect" href="https://youtube.com">
-  <link rel="preconnect" href="https://www.youtube.com">
-  <link rel="preconnect" href="https://i.ytimg.com">
   <style>
-    /* Все стили без изменений */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -178,8 +175,8 @@
       border: none;
     }
 
+    /* Стили для кнопки-ссылки (полупрозрачная белая) */
     .yandex-fallback {
-      display: none;
       width: 100%;
       max-width: 614px;
       margin: 0 auto;
@@ -188,21 +185,24 @@
 
     .yandex-fallback a {
       display: inline-block;
-      background: #ff4da6;
+      background: rgba(255, 255, 255, 0.2); /* полупрозрачный белый */
+      backdrop-filter: blur(10px);
       color: white;
-      padding: 14px 28px;
-      border-radius: 40px;
+      padding: 16px 32px;
+      border-radius: 50px;
       text-decoration: none;
       font-weight: 500;
+      font-size: 18px;
       letter-spacing: 0.5px;
-      transition: background 0.2s;
-      border: none;
-      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: background 0.3s, transform 0.2s;
       margin: 20px 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
 
     .yandex-fallback a:hover {
-      background: #ff7ab9;
+      background: rgba(255, 255, 255, 0.35);
+      transform: scale(1.02);
     }
 
     .video-container {
@@ -269,6 +269,22 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       pointer-events: none;
       z-index: 10;
+    }
+
+    /* На мобильных показываем кнопку, на десктопах — iframe */
+    @media (max-width: 600px) {
+      .yandex-container {
+        display: none;
+      }
+      .yandex-fallback {
+        display: block;
+      }
+    }
+
+    @media (min-width: 601px) {
+      .yandex-fallback {
+        display: none;
+      }
     }
 
     @media (max-width: 700px) {
@@ -475,8 +491,7 @@
   }
   const paragraphPlain = getPlainTextWithNewlines(paragraphHTML);
   
-  // Ускоренная печать: 20 мс на символ
-  const speed = 20;
+  const speed = 20; // можно настроить
 
   function typeText(element, text, callback) {
     let index = 0;
@@ -508,6 +523,8 @@
       setTimeout(function() {
         typeText(paragraphEl, paragraphPlain, function() {
           mediaBlock.style.display = 'block';
+          // На мобильных плеер Яндекс покажет кнопку, на десктопах — iframe
+          // По умолчанию активируем Яндекс (кнопка или iframe в зависимости от экрана)
           activateMedia('yandex');
         });
       }, 500);

@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://music.yandex.ru">
   <link rel="preconnect" href="https://youtube.com">
   <style>
-    /* Все стили без изменений (оставлены как в вашем коде) */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -103,11 +102,19 @@
       z-index: 3;
     }
 
+    h1, p, .timer-container, .minimal-media {
+      opacity: 0; /* изначально скрыты */
+      transition: opacity 1.5s ease;
+    }
+
+    h1.visible, p.visible, .timer-container.visible, .minimal-media.visible {
+      opacity: 1;
+    }
+
     h1 {
       font-size: 40px;
       margin-bottom: 20px;
       letter-spacing: 1px;
-      min-height: 3rem;
       word-break: break-word;
     }
 
@@ -115,14 +122,11 @@
       font-size: 18px;
       line-height: 1.6;
       margin-bottom: 50px;
-      opacity: 0.9;
-      min-height: 200px;
       word-break: break-word;
     }
 
     .timer-container {
       margin-bottom: 40px;
-      display: none;
     }
 
     .timer-label {
@@ -145,7 +149,6 @@
     .minimal-media {
       margin: 20px 0;
       width: 100%;
-      display: none;
     }
 
     .media-player {
@@ -349,12 +352,17 @@
   <div class="glow"></div>
 
   <div class="card">
-    <h1 id="typewriter-title"></h1>
+    <h1 id="mainTitle">С 8 Марта, моя прекрасная 🌷</h1>
     <div class="timer-container" id="timer-block">
       <div class="timer-label">Мы знакомы уже:</div>
       <div class="timer" id="timer">0 дней 00:00:00</div>
     </div>
-    <p id="typewriter-paragraph"></p>
+    <p id="mainParagraph">Пусть этот день подарит тебе море улыбок и счастья.<br>
+Ты — самое светлое, что есть в моей жизни.<br>
+Каждое утро я просыпаюсь и думаю о тебе. Твой смех звучит для меня как самая красивая мелодия. Твои глаза сияют ярче всех звёзд на этом небе. Я благодарен судьбе за каждый миг, проведённый рядом с тобой.<br>
+Ты делаешь этот мир лучше просто тем, что существуешь. В твоём сердце столько тепла и доброты, что им можно согреть всю планету. Ты — вдохновение, моя муза, моя опора и моя самая большая радость.<br>
+Желаю тебе бесконечного счастья, крепкого здоровья, исполнения самых заветных желаний. Пусть каждый день приносит только приятные сюрпризы, пусть окружают только искренние люди, а в душе всегда цветёт весна. Ты заслуживаешь самого лучшего в этом мире, и я сделаю всё, чтобы ты это чувствовала каждый день.<br>
+Спасибо тебе за твою улыбку, за твои объятия, за то, что ты просто есть. С 8 Марта, моя любимая! 🌷🌷🌷</p>
     <div class="minimal-media" id="media-block">
       <div class="media-player" id="player-yandex">
         <div class="yandex-container">
@@ -467,68 +475,42 @@
     if (diff.months > 0) parts.push(diff.months + ' ' + plural(diff.months, 'месяц', 'месяца', 'месяцев'));
     if (diff.days > 0) parts.push(diff.days + ' ' + plural(diff.days, 'день', 'дня', 'дней'));
     if (diff.hours > 0) parts.push(diff.hours + ' ' + plural(diff.hours, 'час', 'часа', 'часов'));
-    if (diff.minutes > 0) parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минуту', 'минуты', 'минут'));
-    parts.push(diff.seconds + ' ' + plural(diff.seconds, 'секунду', 'секунды', 'секунд'));
+    if (diff.minutes > 0) parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минута', 'минуты', 'минут'));
+    parts.push(diff.seconds + ' ' + plural(diff.seconds, 'секунда', 'секунды', 'секунд'));
     const timer = document.getElementById('timer');
     if (timer) timer.textContent = parts.join(' ');
   }
 
-  const titleEl = document.getElementById('typewriter-title');
+  const titleEl = document.getElementById('mainTitle');
   const timerBlock = document.getElementById('timer-block');
-  const paragraphEl = document.getElementById('typewriter-paragraph');
+  const paragraphEl = document.getElementById('mainParagraph');
   const mediaBlock = document.getElementById('media-block');
 
-  const titleText = 'С 8 Марта, моя прекрасная 🌷';
+  function startSequence() {
+    // 1. Заголовок
+    setTimeout(() => {
+      titleEl.classList.add('visible');
+    }, 200); // небольшая задержка перед первым появлением
 
-  // ИСПРАВЛЕНО: правильная многострочная строка с шаблонными литералами и расставленными <br>
-  const paragraphHTML = `Пусть этот день подарит тебе море улыбок и счастья.<br>
-Ты — самое светлое, что есть в моей жизни.<br>
-Каждое утро я просыпаюсь и думаю о тебе. Твой смех звучит для меня как самая красивая мелодия. Твои глаза сияют ярче всех звёзд на этом небе. Я благодарен судьбе за каждый миг, проведённый рядом с тобой.<br>
-Ты делаешь этот мир лучше просто тем, что существуешь. В твоём сердце столько тепла и доброты, что им можно согреть всю планету. Ты — вдохновение, моя муза, моя опора и моя самая большая радость.<br>
-Желаю тебе бесконечного счастья, крепкого здоровья, исполнения самых заветных желаний. Пусть каждый день приносит только приятные сюрпризы, пусть окружают только искренние люди, а в душе всегда цветёт весна. Ты заслуживаешь самого лучшего в этом мире, и я сделаю всё, чтобы ты это чувствовала каждый день.<br>
-Спасибо тебе за твою улыбку, за твои объятия, за то, что ты просто есть. С 8 Марта, моя любимая! 🌷🌷🌷`;
-
-  function getPlainTextWithNewlines(html) {
-    return html.replace(/<br\s*\/?>/g, '\n').replace(/<[^>]*>/g, '');
-  }
-  const paragraphPlain = getPlainTextWithNewlines(paragraphHTML);
-  
-  const speed = 35;
-
-  function typeText(element, text, callback) {
-    let index = 0;
-    element.innerHTML = '';
-    function type() {
-      if (index < text.length) {
-        const char = text.charAt(index);
-        if (char === '\n') {
-          element.innerHTML += '<br>';
-        } else {
-          element.innerHTML += char;
-        }
-        index++;
-        setTimeout(type, speed);
-      } else {
-        if (typeof callback === 'function') callback();
-      }
-    }
-    type();
-  }
-
-  function startTypewriter() {
-    typeText(titleEl, titleText, function() {
-      timerBlock.style.display = 'block';
+    // 2. Таймер через 1.2 секунды
+    setTimeout(() => {
+      timerBlock.classList.add('visible');
       if (!window.timerInterval) {
         updateTimer();
         window.timerInterval = setInterval(updateTimer, 1000);
       }
-      setTimeout(function() {
-        typeText(paragraphEl, paragraphPlain, function() {
-          mediaBlock.style.display = 'block';
-          activateMedia('yandex');
-        });
-      }, 500);
-    });
+    }, 1200);
+
+    // 3. Параграф через 2.4 секунды
+    setTimeout(() => {
+      paragraphEl.classList.add('visible');
+    }, 2400);
+
+    // 4. Медиа-блок через 3.6 секунды
+    setTimeout(() => {
+      mediaBlock.classList.add('visible');
+      activateMedia('yandex');
+    }, 3600);
   }
 
   const dots = document.querySelectorAll('.switch-dot');
@@ -560,7 +542,7 @@
     });
   }
 
-  window.addEventListener('load', startTypewriter);
+  window.addEventListener('load', startSequence);
 })();
 </script>
 </body>

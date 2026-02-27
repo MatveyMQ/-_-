@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://music.yandex.ru">
   <link rel="preconnect" href="https://youtube.com">
   <style>
-    /* Все стили без изменений (оставлены как в вашем коде) */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -270,19 +269,16 @@
       z-index: 10;
     }
 
-    @media (max-width: 600px) {
-      .yandex-container {
+    /* Убрано скрытие звёзд на мобильных */
+    /* @media (max-width: 600px) {
+      .stars {
         display: none;
       }
-      .yandex-fallback {
-        display: block;
-      }
-    }
+    } */
 
-    @media (min-width: 601px) {
-      .yandex-fallback {
-        display: none;
-      }
+    /* Плеер Яндекс.Музыки показываем на всех устройствах */
+    .yandex-fallback {
+      display: none;
     }
 
     @media (max-width: 700px) {
@@ -318,9 +314,6 @@
         height: 32px;
       }
       .switch-dot:hover::after {
-        display: none;
-      }
-      .stars {
         display: none;
       }
     }
@@ -399,23 +392,28 @@
     const starsContainer = document.querySelector('.stars');
     const card = document.querySelector('.card');
     if (!starsContainer || !card) return;
-    if (window.innerWidth <= 600) return;
-    starsContainer.innerHTML = '';
-    const starCount = 25;
+
+    // Для мобильных можно уменьшить количество звёзд, но сейчас оставим как есть
+    const starCount = window.innerWidth <= 600 ? 15 : 25; // чуть меньше на мобильных
     const rect = card.getBoundingClientRect();
+    starsContainer.innerHTML = '';
+
     function isInsideCard(xPercent, yPercent) {
       const x = (xPercent / 100) * window.innerWidth;
       const y = (yPercent / 100) * window.innerHeight;
       return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
     }
+
     let created = 0;
     let attempts = 0;
     const maxAttempts = 500;
+
     while (created < starCount && attempts < maxAttempts) {
       attempts++;
       const x = Math.random() * 100;
       const y = Math.random() * 100;
       if (isInsideCard(x, y)) continue;
+
       const star = document.createElement('div');
       star.className = 'star';
       star.style.left = x + '%';
@@ -427,7 +425,9 @@
       created++;
     }
   }
+
   window.addEventListener('load', generateStars);
+  window.addEventListener('resize', generateStars); // перегенерация при изменении размера
 
   function plural(n, one, two, five) {
     n = Math.abs(n) % 100;
@@ -467,8 +467,8 @@
     if (diff.months > 0) parts.push(diff.months + ' ' + plural(diff.months, 'месяц', 'месяца', 'месяцев'));
     if (diff.days > 0) parts.push(diff.days + ' ' + plural(diff.days, 'день', 'дня', 'дней'));
     if (diff.hours > 0) parts.push(diff.hours + ' ' + plural(diff.hours, 'час', 'часа', 'часов'));
-    if (diff.minutes > 0) parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минуту', 'минуты', 'минут'));
-    parts.push(diff.seconds + ' ' + plural(diff.seconds, 'секунду', 'секунды', 'секунд'));
+    if (diff.minutes > 0) parts.push(diff.minutes + ' ' + plural(diff.minutes, 'минута', 'минуты', 'минут'));
+    parts.push(diff.seconds + ' ' + plural(diff.seconds, 'секунда', 'секунды', 'секунд'));
     const timer = document.getElementById('timer');
     if (timer) timer.textContent = parts.join(' ');
   }
@@ -480,7 +480,6 @@
 
   const titleText = 'С 8 Марта, моя прекрасная 🌷';
 
-  // ИСПРАВЛЕНО: правильная многострочная строка с шаблонными литералами и расставленными <br>
   const paragraphHTML = `Пусть этот день подарит тебе море улыбок и счастья.<br>
 Ты — самое светлое, что есть в моей жизни.<br>
 Каждое утро я просыпаюсь и думаю о тебе. Твой смех звучит для меня как самая красивая мелодия. Твои глаза сияют ярче всех звёзд на этом небе. Я благодарен судьбе за каждый миг, проведённый рядом с тобой.<br>

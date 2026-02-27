@@ -10,34 +10,31 @@
       margin: 0;
       padding: 0;
     }
-    
-    /* Базовый фон для html (виден при overscroll) */
+
     html {
       background: #0f172a;
     }
-    
+
     html, body {
       width: 100%;
-      min-height: 100vh;          /* fallback */
-      min-height: 100dvh;         /* для современных браузеров */
+      min-height: 100vh;
+      min-height: 100dvh;
       background: radial-gradient(circle at top, #1a1a1a, #000);
       color: #fff;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       overflow-x: hidden;
     }
-    
+
     body {
       position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding:
-        env(safe-area-inset-top)
-        env(safe-area-inset-right)
-        env(safe-area-inset-bottom)
-        env(safe-area-inset-left);
+      /* fallback для safe-area */
+      padding: 0;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
-    
+
     /* Звезды */
     .stars {
       position: fixed;
@@ -48,33 +45,34 @@
       pointer-events: none;
       z-index: 1;
     }
-    
+
     .star {
       position: absolute;
-      width: 12px;
-      height: 12px;
       opacity: 0;
       animation: twinkle linear infinite;
       pointer-events: none;
       z-index: 1;
     }
-    
+
     .star svg {
       width: 100%;
       height: 100%;
       fill: white;
       filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
     }
-    
+
     @keyframes twinkle {
       0% { opacity: 0; transform: scale(0.8); }
       50% { opacity: 0.9; transform: scale(1.1); }
       100% { opacity: 0; transform: scale(0.8); }
     }
-    
-    /* Свечение */
+
+    /* Свечение — центрировано */
     .glow {
       position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       width: 800px;
       height: 800px;
       background: radial-gradient(circle, #ff4da6 0%, transparent 70%);
@@ -83,13 +81,12 @@
       animation: pulse 6s infinite alternate;
       z-index: 1;
     }
-    
+
     @keyframes pulse {
-      from { opacity: 0.3; transform: scale(1); }
-      to { opacity: 0.5; transform: scale(1.1); }
+      from { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+      to { opacity: 0.5; transform: translate(-50%, -50%) scale(1.1); }
     }
-    
-    /* Основной контейнер */
+
     .main {
       min-height: 100vh;
       width: 100%;
@@ -100,12 +97,10 @@
       position: relative;
       z-index: 2;
     }
-    
-    /* Карточка */
+
     .card {
       position: relative;
       background: rgba(255, 255, 255, 0.06);
-      /* На мобильных отключаем тяжёлый backdrop-filter для производительности */
       backdrop-filter: blur(30px);
       border-radius: 40px;
       padding: 60px 40px;
@@ -115,51 +110,46 @@
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
       z-index: 3;
     }
-    
-    /* Анимации появления */
+
     .fade {
       opacity: 0;
       transform: translateY(20px);
       animation: fadeUp 1.5s ease forwards;
     }
-    
+
     .fade.delay1 { animation-delay: 0.5s; }
     .fade.delay2 { animation-delay: 1.2s; }
     .fade.delay3 { animation-delay: 1.8s; }
     .fade.delay4 { animation-delay: 2.4s; }
-    
+
     @keyframes fadeUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
-    
+
     h1 {
       font-size: 40px;
       margin-bottom: 20px;
       letter-spacing: 1px;
     }
-    
+
     p {
       font-size: 18px;
       line-height: 1.6;
       margin-bottom: 50px;
       opacity: 0.9;
     }
-    
-    /* Таймер */
+
     .timer-container {
       margin-bottom: 40px;
     }
-    
+
     .timer-label {
       font-size: 14px;
       opacity: 0.7;
       margin-bottom: 5px;
       letter-spacing: 1px;
     }
-    
+
     .timer {
       font-size: 28px;
       font-weight: 300;
@@ -169,23 +159,21 @@
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
       word-break: break-word;
     }
-    
-    /* Контейнер для медиа */
+
     .minimal-media {
       margin: 20px 0;
       width: 100%;
     }
-    
-    /* Плееры */
+
     .media-player {
       display: none;
       width: 100%;
     }
-    
+
     .media-player.active {
       display: block;
     }
-    
+
     /* Общие стили для контейнеров плееров */
     .yandex-container,
     .video-container {
@@ -197,24 +185,21 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       background: rgba(0, 0, 0, 0.3);
     }
-    
+
     /* Яндекс.Музыка iframe */
     .yandex-container iframe {
       display: block;
       width: 100%;
-      height: auto;
-      min-height: 200px;
-      max-height: 244px;
       aspect-ratio: 614 / 244;
       border: none;
     }
-    
+
     /* YouTube iframe */
     .video-container {
       position: relative;
       aspect-ratio: 16 / 9;
     }
-    
+
     .video-container iframe {
       position: absolute;
       top: 0;
@@ -223,28 +208,41 @@
       height: 100%;
       border: none;
     }
-    
-    /* Точки переключения */
+
+    /* Точки переключения — увеличенная область касания без изменения внешнего вида */
     .media-switch {
       display: flex;
       justify-content: center;
-      gap: 25px;
+      gap: 20px;
       margin-top: 25px;
     }
-    
+
     .switch-dot {
+      width: 30px;        /* увеличенная область касания */
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .switch-dot::before {
+      content: '';
       width: 14px;
       height: 14px;
       border-radius: 50%;
       background: white;
       box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-      cursor: pointer;
       transition: all 0.2s ease;
-      padding: 8px;
-      background-clip: content-box;
-      position: relative;
     }
-    
+
+    .switch-dot.active::before {
+      background: #ff4da6;
+      box-shadow: 0 0 12px #ff4da6;
+      transform: scale(1.2);
+    }
+
     .switch-dot:hover::after {
       content: attr(data-tooltip);
       position: absolute;
@@ -263,105 +261,78 @@
       pointer-events: none;
       z-index: 10;
     }
-    
-    .switch-dot.active {
-      background: #ff4da6;
-      box-shadow: 0 0 12px #ff4da6;
-      transform: scale(1.2);
-    }
-    
-    /* Оптимизация для мобильных: меньше звезд, отключаем тяжелые эффекты */
+
+    /* Оптимизация для мобильных */
     @media (max-width: 700px) {
       .card {
         padding: 40px 30px;
-        /* Убираем backdrop-filter для производительности */
         backdrop-filter: none;
         background: rgba(20, 20, 30, 0.8);
       }
-      
-      .yandex-container iframe {
-        min-height: 180px;
-      }
-      
-      /* Уменьшаем интенсивность свечения */
+
       .glow {
         opacity: 0.15;
         filter: blur(80px);
       }
     }
-    
+
     @media (max-width: 600px) {
       .main {
         padding: 10px;
       }
-      
+
       .card {
         padding: 30px 16px;
         border-radius: 24px;
       }
-      
+
       h1 {
         font-size: 26px;
         margin-bottom: 16px;
       }
-      
+
       p {
         font-size: 15px;
         margin-bottom: 30px;
         line-height: 1.5;
       }
-      
+
       .timer {
         font-size: 20px;
       }
-      
+
       .glow {
         width: 250px;
         height: 250px;
         opacity: 0.12;
         filter: blur(60px);
       }
-      
+
       .switch-dot {
-        width: 20px;
-        height: 20px;
-        padding: 8px;
+        width: 32px;
+        height: 32px;
       }
-      
+
       .switch-dot:hover::after {
         display: none;
       }
-      
-      .yandex-container iframe {
-        min-height: 160px;
-      }
     }
-    
+
     @media (max-width: 400px) {
       .card {
         padding: 20px 12px;
       }
-      
+
       h1 {
         font-size: 22px;
       }
-      
+
       p {
         font-size: 14px;
       }
-      
+
       .timer {
         font-size: 18px;
-      }
-      
-      .yandex-container iframe {
-        min-height: 140px;
-      }
-    }
-    
-    @media (max-width: 320px) {
-      .yandex-container iframe {
-        min-height: 120px;
       }
     }
   </style>
@@ -428,18 +399,18 @@
 
 <script>
 (function() {
-  /* =======================
-     Оптимизированная генерация звёзд (только при загрузке и ориентации)
-  ======================== */
+  "use strict";
+
+  /* ---------- Генерация звёзд (с debounce при ресайзе) ---------- */
+  const starsContainer = document.querySelector('.stars');
+  const card = document.querySelector('.card');
+
   function generateStars() {
-    const starsContainer = document.querySelector('.stars');
-    const card = document.querySelector('.card');
     if (!starsContainer || !card) return;
 
     starsContainer.innerHTML = '';
 
-    // Меньше звезд на мобильных
-    const starCount = window.innerWidth < 600 ? 20 : 40;
+    const starCount = window.innerWidth < 600 ? 15 : 30; // чуть меньше для производительности
     const rect = card.getBoundingClientRect();
 
     function isInsideCard(xPercent, yPercent) {
@@ -455,7 +426,7 @@
 
     let created = 0;
     let attempts = 0;
-    const maxAttempts = 300; // снижаем попытки для производительности
+    const maxAttempts = 1000; // увеличено для гарантии
 
     while (created < starCount && attempts < maxAttempts) {
       attempts++;
@@ -467,7 +438,7 @@
       const star = document.createElement('div');
       star.className = 'star';
 
-      const size = Math.random() * 8 + 4; // чуть меньше звёзды
+      const size = Math.random() * 8 + 4;
       star.style.width = size + 'px';
       star.style.height = size + 'px';
       star.style.left = x + '%';
@@ -490,27 +461,25 @@
     }
   }
 
-  // Генерируем звёзды один раз после загрузки страницы
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', generateStars);
-  } else {
-    generateStars();
-  }
+  // Генерируем после полной загрузки страницы, чтобы размеры карточки были точными
+  window.addEventListener('load', generateStars);
 
-  // При повороте экрана генерируем заново, но с задержкой и только если изменилась ориентация
-  let lastWidth = window.innerWidth;
+  // Дебаунс для ресайза
+  let resizeTimeout;
   window.addEventListener('resize', () => {
-    // Если ширина изменилась существенно (поворот), обновляем звёзды
-    if (Math.abs(window.innerWidth - lastWidth) > 100) {
-      lastWidth = window.innerWidth;
-      setTimeout(generateStars, 200);
-    }
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      // Пересоздаём звёзды только если ширина изменилась существенно
+      if (Math.abs(window.innerWidth - lastWidth) > 100) {
+        lastWidth = window.innerWidth;
+        generateStars();
+      }
+    }, 200);
   });
 
-  /* =======================
-     Таймер (более точный)
-  ======================== */
+  let lastWidth = window.innerWidth;
 
+  /* ---------- Таймер ---------- */
   function plural(n, one, two, five) {
     n = Math.abs(n) % 100;
     const n1 = n % 10;
@@ -570,68 +539,76 @@
   setInterval(updateTimer, 1000);
   updateTimer();
 
-  /* =======================
-     Переключение плееров (со свайпом)
-  ======================== */
+  /* ---------- Переключение плееров (клики + свайп) ---------- */
+  const container = document.getElementById('swipe-container');
+  const dots = document.querySelectorAll('.switch-dot');
+  const players = {
+    yandex: document.getElementById('player-yandex'),
+    youtube: document.getElementById('player-youtube')
+  };
 
-  document.addEventListener('DOMContentLoaded', function() {
+  const mediaList = ['yandex', 'youtube'];
 
-    const container = document.getElementById('swipe-container');
-    const dots = document.querySelectorAll('.switch-dot');
-    const players = {
-      yandex: document.getElementById('player-yandex'),
-      youtube: document.getElementById('player-youtube')
-    };
+  function activateMedia(key) {
+    dots.forEach(d => d.classList.remove('active'));
+    Object.values(players).forEach(p => p && p.classList.remove('active'));
 
-    const mediaList = ['yandex', 'youtube'];
+    const dot = [...dots].find(d => d.dataset.media === key);
+    if (dot) dot.classList.add('active');
+    if (players[key]) players[key].classList.add('active');
+  }
 
-    function activateMedia(key) {
-      dots.forEach(d => d.classList.remove('active'));
-      Object.values(players).forEach(p => p && p.classList.remove('active'));
-
-      const dot = [...dots].find(d => d.dataset.media === key);
-      if (dot) dot.classList.add('active');
-      if (players[key]) players[key].classList.add('active');
-    }
-
-    dots.forEach(dot => {
-      dot.addEventListener('click', () => activateMedia(dot.dataset.media));
+  // Обработка кликов по точкам
+  dots.forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      activateMedia(dot.dataset.media);
     });
+  });
 
-    const isTouchDevice =
-      'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  // Свайп на мобильных устройствах (всегда вешаем обработчики, но они сработают только при касании)
+  if (container) {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+    const SWIPE_THRESHOLD = 30;
+    const MAX_TIME = 300; // максимальное время свайпа
 
-    if (!isTouchDevice || !container) return;
-
-    let startX = 0;
-    let startY = 0;
-    const threshold = 30;
-
-    container.addEventListener('touchstart', e => {
-      const t = e.touches[0];
-      startX = t.clientX;
-      startY = t.clientY;
+    container.addEventListener('touchstart', (e) => {
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      touchStartTime = Date.now();
     }, { passive: true });
 
-    container.addEventListener('touchend', e => {
-      const t = e.changedTouches[0];
-      const dx = t.clientX - startX;
-      const dy = t.clientY - startY;
+    container.addEventListener('touchend', (e) => {
+      if (!touchStartX) return; // если не было touchstart
 
-      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > threshold) {
-        const active = [...dots].find(d => d.classList.contains('active'));
-        if (!active) return;
+      const touch = e.changedTouches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      const time = Date.now() - touchStartTime;
 
-        const index = mediaList.indexOf(active.dataset.media);
-        const newIndex = dx > 0
-          ? (index - 1 + mediaList.length) % mediaList.length
-          : (index + 1) % mediaList.length;
+      // Проверяем, что это горизонтальный свайп (|dx| > |dy|) и длительность не слишком большая
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE_THRESHOLD && time < MAX_TIME) {
+        const activeDot = [...dots].find(d => d.classList.contains('active'));
+        if (!activeDot) return;
 
+        const index = mediaList.indexOf(activeDot.dataset.media);
+        let newIndex;
+        if (dx > 0) {
+          // свайп вправо — предыдущий
+          newIndex = (index - 1 + mediaList.length) % mediaList.length;
+        } else {
+          // свайп влево — следующий
+          newIndex = (index + 1) % mediaList.length;
+        }
         activateMedia(mediaList[newIndex]);
       }
-    }, { passive: true });
 
-  });
+      touchStartX = 0; // сброс
+    }, { passive: true });
+  }
 
 })();
 </script>

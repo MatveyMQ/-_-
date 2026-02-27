@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="color-scheme" content="dark only">
   <title>С 8 Марта 🌷</title>
-  <!-- Предварительное подключение для ускорения -->
+  <!-- Предварительное подключение -->
   <link rel="preconnect" href="https://music.yandex.ru">
   <link rel="preconnect" href="https://youtube.com">
   <style>
@@ -185,7 +185,7 @@
 
     .yandex-fallback a {
       display: inline-block;
-      background: rgba(255, 255, 255, 0.2); /* полупрозрачный белый */
+      background: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(10px);
       color: white;
       padding: 16px 32px;
@@ -271,7 +271,7 @@
       z-index: 10;
     }
 
-    /* На мобильных показываем кнопку, на десктопах — iframe */
+    /* Адаптивность: на мобильных кнопка, на десктопах iframe */
     @media (max-width: 600px) {
       .yandex-container {
         display: none;
@@ -358,12 +358,13 @@
     </div>
     <p id="typewriter-paragraph"></p>
     <div class="minimal-media" id="media-block">
+      <!-- Яндекс.Музыка: новый трек SALUKI – ОГНЕЙ -->
       <div class="media-player" id="player-yandex">
         <div class="yandex-container">
           <iframe 
-            frameborder="0" 
+            frameborder="0"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            src="https://music.yandex.ru/iframe/album/27015943/track/116515817?autoplay=0"
+            src="https://music.yandex.ru/iframe/album/25511786/track/106597497"
             title="Яндекс.Музыка"
             loading="lazy">
           </iframe>
@@ -372,17 +373,20 @@
           <a href="#" id="yandex-music-link">Слушать в Яндекс.Музыке</a>
         </div>
       </div>
+
+      <!-- YouTube: то же видео -->
       <div class="media-player" id="player-youtube">
         <div class="video-container">
           <iframe 
             title="YouTube"
-            src="https://www.youtube.com/embed/AZ1psyyKmMY"
+            src="https://www.youtube.com/embed/H6tNm72cMA8?si=7LztmobAC2tTjsf-"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
             allowfullscreen
             loading="lazy">
           </iframe>
         </div>
       </div>
+
       <div class="media-switch">
         <span class="switch-dot" data-media="yandex" data-tooltip="Яндекс.Музыка"></span>
         <span class="switch-dot" data-media="youtube" data-tooltip="YouTube"></span>
@@ -523,9 +527,7 @@
       setTimeout(function() {
         typeText(paragraphEl, paragraphPlain, function() {
           mediaBlock.style.display = 'block';
-          // На мобильных плеер Яндекс покажет кнопку, на десктопах — iframe
-          // По умолчанию активируем Яндекс (кнопка или iframe в зависимости от экрана)
-          activateMedia('yandex');
+          activateMedia('yandex'); // по умолчанию Яндекс (десктоп iframe, моб кнопка)
         });
       }, 500);
     });
@@ -556,7 +558,7 @@
   if (yandexLink) {
     yandexLink.addEventListener('click', function(e) {
       e.preventDefault();
-      window.open('https://music.yandex.ru/album/27015943/track/116515817', '_blank');
+      window.open('https://music.yandex.ru/album/25511786/track/106597497', '_blank');
     });
   }
 

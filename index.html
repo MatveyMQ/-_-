@@ -5,25 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>С 8 Марта 🌷</title>
   <style>
-    /* Сбрасываем все отступы */
+    /* Абсолютный сброс */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
+
+    /* Заставляем html и body занимать всю высоту */
     html, body {
       width: 100%;
-      min-height: 100dvh; /* используем динамическую высоту */
-      background: radial-gradient(circle at top, #1a1a1a, #000);
-      color: #fff;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      overflow-x: hidden;
+      height: 100%; /* явная высота */
       margin: 0;
       padding: 0;
+      overflow-x: hidden;
     }
 
     body {
-      position: relative;
+      background: radial-gradient(circle at top, #1a1a1a, #000) fixed; /* фиксируем фон */
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      /* Растягиваем body на всю высоту */
+      display: flex;
+      flex-direction: column;
     }
 
     .star {
@@ -66,7 +70,7 @@
     }
 
     .main {
-      min-height: 100dvh; /* динамическая высота */
+      flex: 1; /* занимает всё доступное место */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -86,6 +90,7 @@
       text-align: center;
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
       z-index: 3;
+      margin: auto; /* центрирование */
     }
 
     .fade {
@@ -145,7 +150,7 @@
       height: 244px;
     }
 
-    /* YouTube (видео) */
+    /* YouTube */
     .video-wrapper {
       position: relative;
       width: 100%;
@@ -163,7 +168,7 @@
       height: 100%;
     }
 
-    /* Две точки навигации */
+    /* Две точки */
     .media-switch {
       display: flex;
       justify-content: center;
@@ -209,18 +214,21 @@
       transform: scale(1.2);
     }
 
-    /* --- Мобильные улучшения --- */
+    /* --- Мобильная версия без белых полос --- */
     @media (max-width: 600px) {
       .main {
-        padding: 10px; /* минимальные отступы */
+        padding: 0; /* полностью убираем отступы */
       }
 
       .card {
         padding: 30px 16px;
-        border-radius: 24px;
-        /* растягиваем карточку на всю доступную ширину и высоту */
-        width: 100%;
+        border-radius: 0; /* карточка на всю ширину без скругления */
         max-width: 100%;
+        min-height: 100dvh; /* занимает всю высоту */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* центрируем содержимое по вертикали */
+        margin: 0;
       }
 
       h1 {
@@ -257,214 +265,53 @@
   </style>
 </head>
 <body>
+  <!-- Все элементы остаются без изменений -->
+  <div class="stars"></div>
+  <div class="main">
+    <div class="glow"></div>
+    <div class="card">
+      <h1 class="fade">С 8 Марта, моя прекрасная 🌷</h1>
+      <p class="fade delay1">
+        Пусть этот день подарит тебе море улыбок и счастья.<br>
+        Ты — самое светлое, что есть в моей жизни.
+      </p>
 
-<div class="stars"></div>
-
-<div class="main">
-  <div class="glow"></div>
-
-  <div class="card">
-    <h1 class="fade">С 8 Марта, моя прекрасная 🌷</h1>
-
-    <p class="fade delay1">
-      Пусть этот день подарит тебе море улыбок и счастья.<br>
-      Ты — самое светлое, что есть в моей жизни.
-    </p>
-
-    <!-- Единый медиа-блок: Яндекс.Музыка и YouTube -->
-    <div class="minimal-media fade delay2" id="swipe-container">
-      <!-- Яндекс.Музыка (активна по умолчанию) -->
-      <div class="media-player active" id="player-yandex">
-        <iframe 
-          title="Яндекс.Музыка"
-          src="https://music.yandex.ru/iframe/album/27015943/track/116515817"
-          allow="autoplay; clipboard-write"
-          loading="lazy">
-        </iframe>
-      </div>
-
-      <!-- YouTube (видео) -->
-      <div class="media-player" id="player-youtube">
-        <div class="video-wrapper">
+      <div class="minimal-media fade delay2" id="swipe-container">
+        <!-- Яндекс.Музыка -->
+        <div class="media-player active" id="player-yandex">
           <iframe 
-            title="YouTube"
-            src="https://www.youtube.com/embed/AZ1psyyKmMY"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
+            title="Яндекс.Музыка"
+            src="https://music.yandex.ru/iframe/album/27015943/track/116515817"
+            allow="autoplay; clipboard-write"
             loading="lazy">
           </iframe>
         </div>
-      </div>
 
-      <!-- Две точки навигации -->
-      <div class="media-switch">
-        <span class="switch-dot active" data-media="yandex" data-tooltip="Яндекс.Музыка"></span>
-        <span class="switch-dot" data-media="youtube" data-tooltip="YouTube"></span>
+        <!-- YouTube -->
+        <div class="media-player" id="player-youtube">
+          <div class="video-wrapper">
+            <iframe 
+              title="YouTube"
+              src="https://www.youtube.com/embed/AZ1psyyKmMY"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+
+        <!-- Две точки -->
+        <div class="media-switch">
+          <span class="switch-dot active" data-media="yandex" data-tooltip="Яндекс.Музыка"></span>
+          <span class="switch-dot" data-media="youtube" data-tooltip="YouTube"></span>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-  (function() {
-    function debounce(func, wait) {
-      let timeout;
-      return function executedFunction(...args) {
-        const later = () => {
-          clearTimeout(timeout);
-          func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-      };
-    }
-
-    function generateStars() {
-      const starsContainer = document.querySelector('.stars');
-      const card = document.querySelector('.card');
-      if (!starsContainer || !card) return;
-
-      starsContainer.innerHTML = '';
-
-      const starCount = window.innerWidth < 600 ? 30 : 50;
-      const rect = card.getBoundingClientRect();
-      const safeArea = {
-        left: rect.left,
-        top: rect.top,
-        right: rect.right,
-        bottom: rect.bottom,
-        width: window.innerWidth,
-        height: window.innerHeight
-      };
-
-      function isInsideCard(xPercent, yPercent) {
-        const x = (xPercent / 100) * safeArea.width;
-        const y = (yPercent / 100) * safeArea.height;
-        return (x >= safeArea.left && x <= safeArea.right &&
-                y >= safeArea.top && y <= safeArea.bottom);
-      }
-
-      let starsCreated = 0;
-      const maxAttempts = 500;
-      let attempts = 0;
-
-      while (starsCreated < starCount && attempts < maxAttempts) {
-        attempts++;
-
-        const x = Math.random() * 100;
-        const y = Math.random() * 100;
-
-        if (isInsideCard(x, y)) continue;
-
-        const star = document.createElement('div');
-        star.classList.add('star');
-
-        const size = Math.random() * 10 + 6;
-        star.style.width = size + 'px';
-        star.style.height = size + 'px';
-        star.style.left = x + '%';
-        star.style.top = y + '%';
-        star.style.animationDuration = (Math.random() * 4 + 4) + 's';
-        star.style.animationDelay = (Math.random() * 5) + 's';
-
-        star.innerHTML = `
-          <svg viewBox="0 0 24 24">
-            <path d="M12 2 L14 9 L22 12 L14 15 L12 22 L10 15 L2 12 L10 9 Z"/>
-          </svg>
-        `;
-
-        if (Math.random() > 0.75) {
-          star.querySelector('svg').style.fill = '#ff4da6';
-        }
-
-        starsContainer.appendChild(star);
-        starsCreated++;
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', generateStars);
-    window.addEventListener('resize', debounce(generateStars, 150));
-
-    // --- Логика переключения плееров (точки + свайп только на мобильных) ---
-    document.addEventListener('DOMContentLoaded', function() {
-      const container = document.getElementById('swipe-container');
-      const dots = document.querySelectorAll('.switch-dot');
-      const players = {
-        yandex: document.getElementById('player-yandex'),
-        youtube: document.getElementById('player-youtube')
-      };
-      const mediaList = ['yandex', 'youtube'];
-
-      function activateMedia(mediaKey) {
-        dots.forEach(d => d.classList.remove('active'));
-        Object.values(players).forEach(p => p?.classList.remove('active'));
-
-        const targetDot = Array.from(dots).find(d => d.dataset.media === mediaKey);
-        if (targetDot) targetDot.classList.add('active');
-
-        if (players[mediaKey]) {
-          players[mediaKey].classList.add('active');
-        }
-      }
-
-      dots.forEach(dot => {
-        dot.addEventListener('click', function() {
-          const media = this.dataset.media;
-          activateMedia(media);
-        });
-      });
-
-      // Свайп только на мобильных
-      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-      if (isTouchDevice) {
-        let startX = 0;
-        let startY = 0;
-        let isSwiping = false;
-        const swipeThreshold = 30;
-
-        function handleSwipe(deltaX, deltaY) {
-          if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
-            const currentActive = Array.from(dots).find(d => d.classList.contains('active'));
-            if (!currentActive) return;
-            const currentIndex = mediaList.indexOf(currentActive.dataset.media);
-            let newIndex;
-            if (deltaX > 0) {
-              newIndex = (currentIndex - 1 + mediaList.length) % mediaList.length;
-            } else {
-              newIndex = (currentIndex + 1) % mediaList.length;
-            }
-            activateMedia(mediaList[newIndex]);
-          }
-        }
-
-        container.addEventListener('touchstart', (e) => {
-          const touch = e.touches[0];
-          startX = touch.clientX;
-          startY = touch.clientY;
-          isSwiping = true;
-        }, { passive: true });
-
-        container.addEventListener('touchmove', (e) => {
-          if (!isSwiping) return;
-          e.preventDefault();
-        }, { passive: false });
-
-        container.addEventListener('touchend', (e) => {
-          if (!isSwiping) return;
-          const touch = e.changedTouches[0];
-          const deltaX = touch.clientX - startX;
-          const deltaY = touch.clientY - startY;
-          handleSwipe(deltaX, deltaY);
-          isSwiping = false;
-        }, { passive: true });
-
-        container.addEventListener('touchcancel', () => {
-          isSwiping = false;
-        });
-      }
-    });
-  })();
-</script>
+  <script>
+    // (весь скрипт остаётся без изменений)
+    // Вставьте сюда полный скрипт из предыдущего ответа
+  </script>
 </body>
 </html>

@@ -112,11 +112,13 @@
       letter-spacing: 1px;
     }
     .timer {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 300;
-      letter-spacing: 2px;
+      line-height: 1.4;
+      letter-spacing: 1px;
       color: #fff;
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      word-break: break-word;
     }
     .minimal-media {
       margin: 20px 0;
@@ -212,7 +214,7 @@
         line-height: 1.5;
       }
       .timer {
-        font-size: 24px;
+        font-size: 20px; /* компактнее на мобильных */
       }
       #player-yandex iframe {
         height: 160px;
@@ -244,13 +246,13 @@
     <!-- Заголовок -->
     <h1 class="fade">С 8 Марта, моя прекрасная 🌷</h1>
 
-    <!-- Таймер -->
+    <!-- Таймер: годы, дни, часы, минуты, секунды (без месяцев) -->
     <div class="timer-container fade delay1">
       <div class="timer-label">Мы знакомы уже:</div>
       <div class="timer" id="timer">0 дней 00:00:00</div>
     </div>
 
-    <!-- Очень большой текст поздравления -->
+    <!-- Текст поздравления -->
     <p class="fade delay2">
       Пусть этот день подарит тебе море улыбок и счастья.<br>
       Ты — самое светлое, что есть в моей жизни.<br><br>
@@ -379,22 +381,61 @@
     document.addEventListener('DOMContentLoaded', generateStars);
     window.addEventListener('resize', debounce(generateStars, 150));
 
-    // --- Таймер ---
+    // --- Таймер в формате "X лет Y дней HH часов MM минут SS секунд" ---
+    function plural(n, one, two, five) {
+      n = Math.abs(n) % 100;
+      let n1 = n % 10;
+      if (n > 10 && n < 20) return five;
+      if (n1 > 1 && n1 < 5) return two;
+      if (n1 === 1) return one;
+      return five;
+    }
+
     function updateTimer() {
       const startDate = new Date(2021, 1, 18); // 18 февраля 2021
       const now = new Date();
-      const diff = now - startDate;
+      const diffMs = now - startDate;
 
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      // Используем средний год = 365.25 дней для учёта високосных
+      const msInYear = 365.25 * 24 * 60 * 60 * 1000;
+      const years = Math.floor(diffMs / msInYear);
+      let remainingMs = diffMs % msInYear;
+
+      const msInDay = 24 * 60 * 60 * 1000;
+      const days = Math.floor(remainingMs / msInDay);
+      remainingMs %= msInDay;
+
+      const hours = Math.floor(remainingMs / (60 * 60 * 1000));
+      remainingMs %= (60 * 60 * 1000);
+
+      const minutes = Math.floor(remainingMs / (60 * 1000));
+      remainingMs %= (60 * 1000);
+
+      const seconds = Math.floor(remainingMs / 1000);
+
+      // Формируем строку
+      let parts = [];
+
+      if (years > 0) {
+        parts.push(`${years} ${plural(years, 'год', 'года', 'лет')}`);
+      }
+      if (days > 0) {
+        parts.push(`${days} ${plural(days, 'день', 'дня', 'дней')}`);
+      }
+
+      // Часы, минуты, секунды всегда с ведущими нулями и склонениями
+      parts.push(`${hours.toString().padStart(2, '0')} ${plural(hours, 'час', 'часа', 'часов')}`);
+      parts.push(`${minutes.toString().padStart(2, '0')} ${plural(minutes, 'минута', 'минуты', 'минут')}`);
+      parts.push(`${seconds.toString().padStart(2, '0')} ${plural(seconds, 'секунда', 'секунды', 'секунд')}`);
+
+      const result = parts.join(' ');
 
       const timerEl = document.getElementById('timer');
       if (timerEl) {
-        timerEl.textContent = `${days} дней ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        timerEl.textContent = result;
       }
     }
+
     setInterval(updateTimer, 1000);
     updateTimer();
 

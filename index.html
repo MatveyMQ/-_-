@@ -400,202 +400,208 @@
 </div>
 
 <script>
-  (function() {
-    // Функция для создания звезд
-    function generateStars() {
-      const starsContainer = document.querySelector('.stars');
-      if (!starsContainer) return;
+(function() {
+  /* =======================
+     Debounce
+  ======================== */
+  function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  }
 
-      starsContainer.innerHTML = '';
+  /* =======================
+     Генерация звёзд
+  ======================== */
+  function generateStars() {
+    const starsContainer = document.querySelector('.stars');
+    const card = document.querySelector('.card');
+    if (!starsContainer || !card) return;
 
-      const card = document.querySelector('.card');
-      if (!card) return;
+    starsContainer.innerHTML = '';
 
-      const starCount = window.innerWidth < 600 ? 25 : 40;
-      
-      // Получаем позицию карточки
-      const cardRect = card.getBoundingClientRect();
-      
-      // Функция проверки, находится ли точка над карточкой
-      function isOverCard(x, y) {
-        return (x >= cardRect.left - 20 && x <= cardRect.right + 20 &&
-                y >= cardRect.top - 20 && y <= cardRect.bottom + 20);
-      }
+    const starCount = window.innerWidth < 600 ? 30 : 50;
+    const rect = card.getBoundingClientRect();
 
-      let starsCreated = 0;
-      let attempts = 0;
-      const maxAttempts = 500;
-
-      while (starsCreated < starCount && attempts < maxAttempts) {
-        attempts++;
-        
-        // Генерируем позицию
-        const x = Math.random() * window.innerWidth;
-        const y = Math.random() * window.innerHeight;
-        
-        // Пропускаем, если точка над карточкой
-        if (isOverCard(x, y)) continue;
-
-        const star = document.createElement('div');
-        star.classList.add('star');
-
-        const size = Math.random() * 10 + 6;
-        star.style.width = size + 'px';
-        star.style.height = size + 'px';
-        star.style.left = (x / window.innerWidth * 100) + '%';
-        star.style.top = (y / window.innerHeight * 100) + '%';
-        star.style.animationDuration = (Math.random() * 4 + 4) + 's';
-        star.style.animationDelay = (Math.random() * 5) + 's';
-
-        star.innerHTML = `
-          <svg viewBox="0 0 24 24">
-            <path d="M12 2 L14 9 L22 12 L14 15 L12 22 L10 15 L2 12 L10 9 Z"/>
-          </svg>
-        `;
-
-        if (Math.random() > 0.75) {
-          star.querySelector('svg').style.fill = '#ff4da6';
-        }
-
-        starsContainer.appendChild(star);
-        starsCreated++;
-      }
+    function isInsideCard(xPercent, yPercent) {
+      const x = (xPercent / 100) * window.innerWidth;
+      const y = (yPercent / 100) * window.innerHeight;
+      return (
+        x >= rect.left &&
+        x <= rect.right &&
+        y >= rect.top &&
+        y <= rect.bottom
+      );
     }
 
-    // Запускаем генерацию звезд
-    generateStars();
-    
-    // Обновляем при изменении размера окна
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(generateStars, 150);
-    });
+    let created = 0;
+    let attempts = 0;
 
-    // Таймер
-    function plural(n, one, two, five) {
-      n = Math.abs(n) % 100;
-      let n1 = n % 10;
-      if (n > 10 && n < 20) return five;
-      if (n1 > 1 && n1 < 5) return two;
-      if (n1 === 1) return one;
-      return five;
-    }
+    while (created < starCount && attempts < 500) {
+      attempts++;
 
-    function updateTimer() {
-      const startDate = new Date(2021, 1, 18, 0, 0, 0);
-      const now = new Date();
-      const diffMs = now - startDate;
+      const x = Math.random() * 100;
+      const y = Math.random() * 100;
+      if (isInsideCard(x, y)) continue;
 
-      if (diffMs < 0) {
-        document.getElementById('timer').textContent = '0 дней 00:00:00';
-        return;
+      const star = document.createElement('div');
+      star.className = 'star';
+
+      const size = Math.random() * 10 + 6;
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.left = x + '%';
+      star.style.top = y + '%';
+      star.style.animationDuration = (Math.random() * 4 + 4) + 's';
+      star.style.animationDelay = (Math.random() * 5) + 's';
+
+      star.innerHTML = `
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2 L14 9 L22 12 L14 15 L12 22 L10 15 L2 12 L10 9 Z"/>
+        </svg>
+      `;
+
+      if (Math.random() > 0.75) {
+        star.querySelector('svg').style.fill = '#ff4da6';
       }
 
-      const totalSeconds = Math.floor(diffMs / 1000);
-      const seconds = totalSeconds % 60;
-      const totalMinutes = Math.floor(totalSeconds / 60);
-      const minutes = totalMinutes % 60;
-      const totalHours = Math.floor(totalMinutes / 60);
-      const hours = totalHours % 24;
-      const totalDays = Math.floor(totalHours / 24);
-
-      const years = Math.floor(totalDays / 365.25);
-      const days = Math.floor(totalDays % 365.25);
-
-      let parts = [];
-      if (years > 0) parts.push(`${years} ${plural(years, 'год', 'года', 'лет')}`);
-      if (days > 0 || years === 0) parts.push(`${days} ${plural(days, 'день', 'дня', 'дней')}`);
-      parts.push(`${hours.toString().padStart(2, '0')} ${plural(hours, 'час', 'часа', 'часов')}`);
-      parts.push(`${minutes.toString().padStart(2, '0')} ${plural(minutes, 'минута', 'минуты', 'минут')}`);
-      parts.push(`${seconds.toString().padStart(2, '0')} ${plural(seconds, 'секунда', 'секунды', 'секунд')}`);
-
-      const timerEl = document.getElementById('timer');
-      if (timerEl) timerEl.textContent = parts.join(' ');
+      starsContainer.appendChild(star);
+      created++;
     }
+  }
 
-    setInterval(updateTimer, 1000);
-    updateTimer();
+  document.addEventListener('DOMContentLoaded', generateStars);
+  window.addEventListener('resize', debounce(generateStars, 150));
 
-    // Переключение плееров
+  /* =======================
+     Таймер (более точный)
+  ======================== */
+
+  function plural(n, one, two, five) {
+    n = Math.abs(n) % 100;
+    const n1 = n % 10;
+    if (n > 10 && n < 20) return five;
+    if (n1 > 1 && n1 < 5) return two;
+    if (n1 === 1) return one;
+    return five;
+  }
+
+  function dateDiff(start, end) {
+    let years = end.getFullYear() - start.getFullYear();
+    let months = end.getMonth() - start.getMonth();
+    let days = end.getDate() - start.getDate();
+    let hours = end.getHours() - start.getHours();
+    let minutes = end.getMinutes() - start.getMinutes();
+    let seconds = end.getSeconds() - start.getSeconds();
+
+    if (seconds < 0) { seconds += 60; minutes--; }
+    if (minutes < 0) { minutes += 60; hours--; }
+    if (hours < 0) { hours += 24; days--; }
+    if (days < 0) {
+      const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+      days += prevMonth.getDate();
+      months--;
+    }
+    if (months < 0) { months += 12; years--; }
+
+    return { years, months, days, hours, minutes, seconds };
+  }
+
+  function updateTimer() {
+    const startDate = new Date(2021, 1, 18);
+    const now = new Date();
+    const diff = dateDiff(startDate, now);
+
+    let parts = [];
+
+    if (diff.years > 0)
+      parts.push(diff.years + ' ' + plural(diff.years, 'год', 'года', 'лет'));
+
+    if (diff.months > 0)
+      parts.push(diff.months + ' ' + plural(diff.months, 'месяц', 'месяца', 'месяцев'));
+
+    if (diff.days > 0)
+      parts.push(diff.days + ' ' + plural(diff.days, 'день', 'дня', 'дней'));
+
+    parts.push(
+      diff.hours.toString().padStart(2, '0') + ':' +
+      diff.minutes.toString().padStart(2, '0') + ':' +
+      diff.seconds.toString().padStart(2, '0')
+    );
+
+    const timer = document.getElementById('timer');
+    if (timer) timer.textContent = parts.join(' ');
+  }
+
+  setInterval(updateTimer, 1000);
+  updateTimer();
+
+  /* =======================
+     Переключение плееров (со свайпом)
+  ======================== */
+
+  document.addEventListener('DOMContentLoaded', function() {
+
+    const container = document.getElementById('swipe-container');
     const dots = document.querySelectorAll('.switch-dot');
     const players = {
       yandex: document.getElementById('player-yandex'),
       youtube: document.getElementById('player-youtube')
     };
+
     const mediaList = ['yandex', 'youtube'];
 
-    function activateMedia(mediaKey) {
+    function activateMedia(key) {
       dots.forEach(d => d.classList.remove('active'));
-      Object.values(players).forEach(p => {
-        if (p) p.classList.remove('active');
-      });
+      Object.values(players).forEach(p => p && p.classList.remove('active'));
 
-      const targetDot = Array.from(dots).find(d => d.dataset.media === mediaKey);
-      if (targetDot) targetDot.classList.add('active');
-
-      if (players[mediaKey]) {
-        players[mediaKey].classList.add('active');
-      }
+      const dot = [...dots].find(d => d.dataset.media === key);
+      if (dot) dot.classList.add('active');
+      if (players[key]) players[key].classList.add('active');
     }
 
     dots.forEach(dot => {
-      dot.addEventListener('click', function() {
-        const media = this.dataset.media;
-        activateMedia(media);
-      });
+      dot.addEventListener('click', () => activateMedia(dot.dataset.media));
     });
 
-    // Свайп для мобильных
-    const container = document.getElementById('swipe-container');
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    
-    if (isTouchDevice && container) {
-      let startX = 0, isSwiping = false;
-      const swipeThreshold = 30;
+    const isTouchDevice =
+      'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
-      container.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        isSwiping = true;
-      }, { passive: true });
+    if (!isTouchDevice || !container) return;
 
-      container.addEventListener('touchmove', (e) => {
-        if (!isSwiping) return;
-        const touch = e.touches[0];
-        const deltaX = Math.abs(touch.clientX - startX);
-        if (deltaX > 10) {
-          e.preventDefault();
-        }
-      }, { passive: false });
+    let startX = 0;
+    let startY = 0;
+    const threshold = 30;
 
-      container.addEventListener('touchend', (e) => {
-        if (!isSwiping) return;
-        const deltaX = e.changedTouches[0].clientX - startX;
-        
-        if (Math.abs(deltaX) > swipeThreshold) {
-          const currentActive = Array.from(dots).find(d => d.classList.contains('active'));
-          if (!currentActive) return;
-          
-          const currentIndex = mediaList.indexOf(currentActive.dataset.media);
-          let newIndex;
-          
-          if (deltaX > 0) {
-            newIndex = (currentIndex - 1 + mediaList.length) % mediaList.length;
-          } else {
-            newIndex = (currentIndex + 1) % mediaList.length;
-          }
-          
-          activateMedia(mediaList[newIndex]);
-        }
-        
-        isSwiping = false;
-      }, { passive: true });
+    container.addEventListener('touchstart', e => {
+      const t = e.touches[0];
+      startX = t.clientX;
+      startY = t.clientY;
+    }, { passive: true });
 
-      container.addEventListener('touchcancel', () => {
-        isSwiping = false;
-      });
-    }
-  })();
+    container.addEventListener('touchend', e => {
+      const t = e.changedTouches[0];
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > threshold) {
+        const active = [...dots].find(d => d.classList.contains('active'));
+        if (!active) return;
+
+        const index = mediaList.indexOf(active.dataset.media);
+        const newIndex = dx > 0
+          ? (index - 1 + mediaList.length) % mediaList.length
+          : (index + 1) % mediaList.length;
+
+        activateMedia(mediaList[newIndex]);
+      }
+    }, { passive: true });
+
+  });
+
+})();
 </script>
 </body>
 </html>

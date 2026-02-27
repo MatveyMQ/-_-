@@ -123,7 +123,6 @@
     .minimal-media {
       margin: 20px 0;
       width: 100%;
-      touch-action: pan-y pinch-zoom;
     }
     .media-player {
       display: none;
@@ -137,8 +136,25 @@
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
-    #player-yandex iframe {
-      height: 244px;
+    /* Стили для кнопки Яндекс.Музыки */
+    .yandex-button {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      text-decoration: none;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-size: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      margin: 20px 0;
+    }
+    .yandex-button:hover {
+      background: rgba(255, 77, 166, 0.3);
+      border-color: #ff4da6;
+      transform: scale(1.05);
     }
     .video-wrapper {
       position: relative;
@@ -214,10 +230,7 @@
         line-height: 1.5;
       }
       .timer {
-        font-size: 20px; /* компактнее на мобильных */
-      }
-      #player-yandex iframe {
-        height: 160px;
+        font-size: 20px;
       }
       .glow {
         width: 250px;
@@ -232,6 +245,10 @@
       .switch-dot:hover::after {
         display: none;
       }
+      .yandex-button {
+        padding: 12px 20px;
+        font-size: 16px;
+      }
     }
   </style>
 </head>
@@ -243,39 +260,28 @@
   <div class="glow"></div>
 
   <div class="card">
-    <!-- Заголовок -->
     <h1 class="fade">С 8 Марта, моя прекрасная 🌷</h1>
 
-    <!-- Таймер: годы, дни, часы, минуты, секунды (без месяцев) -->
     <div class="timer-container fade delay1">
       <div class="timer-label">Мы знакомы уже:</div>
       <div class="timer" id="timer">0 дней 00:00:00</div>
     </div>
 
-    <!-- Текст поздравления -->
     <p class="fade delay2">
       Пусть этот день подарит тебе море улыбок и счастья.<br>
       Ты — самое светлое, что есть в моей жизни.<br><br>
-
       Каждое утро я просыпаюсь и думаю о тебе. Твой смех звучит для меня как самая красивая мелодия. Твои глаза сияют ярче всех звёзд на этом небе. Я благодарен судьбе за каждый миг, проведённый рядом с тобой.<br><br>
-
       Ты делаешь этот мир лучше просто тем, что существуешь. В твоём сердце столько тепла и доброты, что им можно согреть всю планету. Ты — вдохновение, моя муза, моя опора и моя самая большая радость.<br><br>
-
       Желаю тебе бесконечного счастья, крепкого здоровья, исполнения самых заветных желаний. Пусть каждый день приносит только приятные сюрпризы, пусть окружают только искренние люди, а в душе всегда цветёт весна. Ты заслуживаешь самого лучшего в этом мире, и я сделаю всё, чтобы ты это чувствовала каждый день.<br><br>
-
       Спасибо тебе за твою улыбку, за твои объятия, за то, что ты просто есть. С 8 Марта, моя любимая! 🌷🌷🌷
     </p>
 
-    <!-- Медиа-блок (Яндекс.Музыка и YouTube) -->
     <div class="minimal-media fade delay3" id="swipe-container">
-      <!-- Яндекс.Музыка (активна по умолчанию) -->
+      <!-- Яндекс.Музыка теперь просто кнопка -->
       <div class="media-player active" id="player-yandex">
-        <iframe 
-          title="Яндекс.Музыка"
-          src="https://music.yandex.ru/iframe/album/27015943/track/116515817"
-          allow="autoplay; clipboard-write"
-          loading="lazy">
-        </iframe>
+        <a href="https://music.yandex.ru/album/27015943/track/116515817" target="_blank" rel="noopener noreferrer" class="yandex-button">
+          Слушать на Яндекс.Музыке
+        </a>
       </div>
 
       <!-- YouTube (видео) -->
@@ -302,7 +308,6 @@
 
 <script>
   (function() {
-    // --- Звёзды ---
     function debounce(func, wait) {
       let timeout;
       return function executedFunction(...args) {
@@ -381,7 +386,7 @@
     document.addEventListener('DOMContentLoaded', generateStars);
     window.addEventListener('resize', debounce(generateStars, 150));
 
-    // --- Таймер в формате "X лет Y дней HH часов MM минут SS секунд" ---
+    // --- Таймер ---
     function plural(n, one, two, five) {
       n = Math.abs(n) % 100;
       let n1 = n % 10;
@@ -392,11 +397,10 @@
     }
 
     function updateTimer() {
-      const startDate = new Date(2021, 1, 18); // 18 февраля 2021
+      const startDate = new Date(2021, 1, 18);
       const now = new Date();
       const diffMs = now - startDate;
 
-      // Используем средний год = 365.25 дней для учёта високосных
       const msInYear = 365.25 * 24 * 60 * 60 * 1000;
       const years = Math.floor(diffMs / msInYear);
       let remainingMs = diffMs % msInYear;
@@ -413,33 +417,21 @@
 
       const seconds = Math.floor(remainingMs / 1000);
 
-      // Формируем строку
       let parts = [];
-
-      if (years > 0) {
-        parts.push(`${years} ${plural(years, 'год', 'года', 'лет')}`);
-      }
-      if (days > 0) {
-        parts.push(`${days} ${plural(days, 'день', 'дня', 'дней')}`);
-      }
-
-      // Часы, минуты, секунды всегда с ведущими нулями и склонениями
+      if (years > 0) parts.push(`${years} ${plural(years, 'год', 'года', 'лет')}`);
+      if (days > 0) parts.push(`${days} ${plural(days, 'день', 'дня', 'дней')}`);
       parts.push(`${hours.toString().padStart(2, '0')} ${plural(hours, 'час', 'часа', 'часов')}`);
       parts.push(`${minutes.toString().padStart(2, '0')} ${plural(minutes, 'минута', 'минуты', 'минут')}`);
       parts.push(`${seconds.toString().padStart(2, '0')} ${plural(seconds, 'секунда', 'секунды', 'секунд')}`);
 
-      const result = parts.join(' ');
-
       const timerEl = document.getElementById('timer');
-      if (timerEl) {
-        timerEl.textContent = result;
-      }
+      if (timerEl) timerEl.textContent = parts.join(' ');
     }
 
     setInterval(updateTimer, 1000);
     updateTimer();
 
-    // --- Логика переключения плееров (точки + свайп только на мобильных) ---
+    // --- Переключение между кнопкой и видео ---
     document.addEventListener('DOMContentLoaded', function() {
       const container = document.getElementById('swipe-container');
       const dots = document.querySelectorAll('.switch-dot');
@@ -468,54 +460,38 @@
         });
       });
 
-      // Свайп только на мобильных
+      // Свайп для мобильных (опционально, если нужно)
       const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
       if (isTouchDevice) {
-        let startX = 0;
-        let startY = 0;
-        let isSwiping = false;
+        let startX = 0, startY = 0, isSwiping = false;
         const swipeThreshold = 30;
-
-        function handleSwipe(deltaX, deltaY) {
-          if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
-            const currentActive = Array.from(dots).find(d => d.classList.contains('active'));
-            if (!currentActive) return;
-            const currentIndex = mediaList.indexOf(currentActive.dataset.media);
-            let newIndex;
-            if (deltaX > 0) {
-              newIndex = (currentIndex - 1 + mediaList.length) % mediaList.length;
-            } else {
-              newIndex = (currentIndex + 1) % mediaList.length;
-            }
-            activateMedia(mediaList[newIndex]);
-          }
-        }
-
         container.addEventListener('touchstart', (e) => {
           const touch = e.touches[0];
           startX = touch.clientX;
           startY = touch.clientY;
           isSwiping = true;
         }, { passive: true });
-
         container.addEventListener('touchmove', (e) => {
           if (!isSwiping) return;
           e.preventDefault();
         }, { passive: false });
-
         container.addEventListener('touchend', (e) => {
           if (!isSwiping) return;
           const touch = e.changedTouches[0];
           const deltaX = touch.clientX - startX;
           const deltaY = touch.clientY - startY;
-          handleSwipe(deltaX, deltaY);
+          if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+            const currentActive = Array.from(dots).find(d => d.classList.contains('active'));
+            if (!currentActive) return;
+            const currentIndex = mediaList.indexOf(currentActive.dataset.media);
+            const newIndex = deltaX > 0 
+              ? (currentIndex - 1 + mediaList.length) % mediaList.length
+              : (currentIndex + 1) % mediaList.length;
+            activateMedia(mediaList[newIndex]);
+          }
           isSwiping = false;
         }, { passive: true });
-
-        container.addEventListener('touchcancel', () => {
-          isSwiping = false;
-        });
+        container.addEventListener('touchcancel', () => { isSwiping = false; });
       }
     });
   })();

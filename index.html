@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>С 8 Марта 🌷</title>
   <style>
-    /* --- стили полностью сохранены из предыдущей версии --- */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -35,6 +34,7 @@
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
+    /* Звезды только для десктопа (ширина > 600px) */
     .stars {
       position: fixed;
       top: 0;
@@ -47,24 +47,24 @@
 
     .star {
       position: absolute;
-      opacity: 0;
-      animation: twinkle linear infinite;
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+      opacity: 0.8;
       pointer-events: none;
       z-index: 1;
     }
 
-    .star svg {
-      width: 100%;
-      height: 100%;
-      filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
+    /* На мобильных звезды скрыты */
+    @media (max-width: 600px) {
+      .stars {
+        display: none;
+      }
     }
 
-    @keyframes twinkle {
-      0% { opacity: 0; transform: scale(0.8); }
-      50% { opacity: 0.9; transform: scale(1.1); }
-      100% { opacity: 0; transform: scale(0.8); }
-    }
-
+    /* Свечение — центрировано, одинаково на всех устройствах */
     .glow {
       position: absolute;
       top: 50%;
@@ -255,6 +255,7 @@
       z-index: 10;
     }
 
+    /* Адаптация под мобильные */
     @media (max-width: 700px) {
       .card {
         padding: 40px 30px;
@@ -372,18 +373,18 @@
 (function() {
   "use strict";
 
-  /* ---------- Оптимизированная генерация звёзд (асинхронная вставка) ---------- */
-  const starsContainer = document.querySelector('.stars');
-  const card = document.querySelector('.card');
-  let isGenerating = false; // флаг для отмены предыдущей генерации
-
+  /* ---------- Простые звезды только для десктопа (без анимации) ---------- */
   function generateStars() {
-    if (!starsContainer || !card || isGenerating) return;
-    isGenerating = true;
+    const starsContainer = document.querySelector('.stars');
+    const card = document.querySelector('.card');
+    if (!starsContainer || !card) return;
 
-    starsContainer.innerHTML = ''; // очищаем старые звёзды
+    // Звезды только на экранах шире 600px
+    if (window.innerWidth <= 600) return;
 
-    const starCount = window.innerWidth < 600 ? 10 : 25; // меньше звёзд на мобильных
+    starsContainer.innerHTML = '';
+
+    const starCount = 15; // фиксированное небольшое количество
     const rect = card.getBoundingClientRect();
 
     function isInsideCard(xPercent, yPercent) {
@@ -397,74 +398,36 @@
       );
     }
 
-    // Генерируем координаты для всех звёзд сразу (лёгкая операция)
-    const stars = [];
+    let created = 0;
     let attempts = 0;
-    const maxAttempts = 1000;
+    const maxAttempts = 300;
 
-    while (stars.length < starCount && attempts < maxAttempts) {
+    while (created < starCount && attempts < maxAttempts) {
       attempts++;
       const x = Math.random() * 100;
       const y = Math.random() * 100;
       if (isInsideCard(x, y)) continue;
 
-      stars.push({
-        x, y,
-        size: Math.random() * 8 + 4,
-        duration: Math.random() * 4 + 4,
-        delay: Math.random() * 5,
-        color: Math.random() > 0.75 ? '#ff4da6' : 'white'
-      });
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = x + '%';
+      star.style.top = y + '%';
+      // случайный размер
+      const size = Math.random() * 4 + 2;
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      // случайная яркость
+      const opacity = Math.random() * 0.5 + 0.3;
+      star.style.opacity = opacity;
+      starsContainer.appendChild(star);
+      created++;
     }
-
-    // Вставляем звёзды порциями, чтобы не блокировать поток
-    let index = 0;
-    function insertBatch() {
-      const batchSize = 5; // по 5 за кадр
-      const fragment = document.createDocumentFragment();
-      for (let i = 0; i < batchSize && index < stars.length; i++, index++) {
-        const s = stars[index];
-        const star = document.createElement('div');
-        star.className = 'star';
-        star.style.width = s.size + 'px';
-        star.style.height = s.size + 'px';
-        star.style.left = s.x + '%';
-        star.style.top = s.y + '%';
-        star.style.animationDuration = s.duration + 's';
-        star.style.animationDelay = s.delay + 's';
-        star.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2 L14 9 L22 12 L14 15 L12 22 L10 15 L2 12 L10 9 Z" fill="${s.color}"/></svg>`;
-        fragment.appendChild(star);
-      }
-      starsContainer.appendChild(fragment);
-      if (index < stars.length) {
-        requestAnimationFrame(insertBatch);
-      } else {
-        isGenerating = false; // генерация завершена
-      }
-    }
-    requestAnimationFrame(insertBatch);
   }
 
-  // Запускаем генерацию после полной загрузки страницы
+  // Генерируем звезды один раз после загрузки страницы
   window.addEventListener('load', generateStars);
 
-  // Оптимизированный ресайз с отменой предыдущей генерации
-  let resizeTimeout;
-  let lastWidth = window.innerWidth;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      if (Math.abs(window.innerWidth - lastWidth) > 100) {
-        lastWidth = window.innerWidth;
-        // Если идёт генерация, она сама завершится, но мы можем отменить флаг
-        // (старая генерация продолжит вставлять звезды, но они будут поверх новых – не критично)
-        // Можно добавить отмену через общий флаг, но проще позволить завершиться.
-        generateStars();
-      }
-    }, 200);
-  });
-
-  /* ---------- Таймер (без изменений) ---------- */
+  /* ---------- Таймер ---------- */
   function plural(n, one, two, five) {
     n = Math.abs(n) % 100;
     const n1 = n % 10;
@@ -521,7 +484,7 @@
   setInterval(updateTimer, 1000);
   updateTimer();
 
-  /* ---------- Переключение плееров (без изменений) ---------- */
+  /* ---------- Переключение плееров ---------- */
   const container = document.getElementById('swipe-container');
   const dots = document.querySelectorAll('.switch-dot');
   const players = {

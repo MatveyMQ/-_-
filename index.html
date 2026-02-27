@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>С 8 Марта 🌷</title>
   <style>
-    /* Сброс отступов */
+    /* все стили остаются точно такими же, как в предыдущем ответе */
+    /* (копируем их сюда без изменений) */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-
     html, body {
       width: 100%;
       min-height: 100vh;
@@ -20,11 +20,9 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       overflow-x: hidden;
     }
-
     body {
       position: relative;
     }
-
     .star {
       position: absolute;
       width: 12px;
@@ -34,20 +32,17 @@
       pointer-events: none;
       z-index: 1;
     }
-
     .star svg {
       width: 100%;
       height: 100%;
       fill: white;
       filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
     }
-
     @keyframes twinkle {
       0% { opacity: 0; transform: scale(0.8); }
       50% { opacity: 0.9; transform: scale(1.1); }
       100% { opacity: 0; transform: scale(0.8); }
     }
-
     .glow {
       position: absolute;
       width: 800px;
@@ -58,12 +53,10 @@
       animation: pulse 6s infinite alternate;
       z-index: 1;
     }
-
     @keyframes pulse {
       from { opacity: 0.3; transform: scale(1); }
       to { opacity: 0.5; transform: scale(1.1); }
     }
-
     .main {
       min-height: 100vh;
       display: flex;
@@ -73,7 +66,6 @@
       position: relative;
       z-index: 2;
     }
-
     .card {
       position: relative;
       background: rgba(255, 255, 255, 0.06);
@@ -86,50 +78,41 @@
       box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
       z-index: 3;
     }
-
     .fade {
       opacity: 0;
       transform: translateY(20px);
       animation: fadeUp 1.5s ease forwards;
     }
-
     .fade.delay1 { animation-delay: 0.5s; }
     .fade.delay2 { animation-delay: 1.2s; }
     .fade.delay3 { animation-delay: 1.8s; }
-    .fade.delay4 { animation-delay: 2.4s; } /* для таймера */
-
+    .fade.delay4 { animation-delay: 2.4s; }
     @keyframes fadeUp {
       to {
         opacity: 1;
         transform: translateY(0);
       }
     }
-
     h1 {
       font-size: 40px;
       margin-bottom: 20px;
       letter-spacing: 1px;
     }
-
     p {
       font-size: 18px;
       line-height: 1.6;
       margin-bottom: 50px;
       opacity: 0.9;
     }
-
-    /* --- Таймер --- */
     .timer-container {
       margin-bottom: 40px;
     }
-
     .timer-label {
       font-size: 14px;
       opacity: 0.7;
       margin-bottom: 5px;
       letter-spacing: 1px;
     }
-
     .timer {
       font-size: 32px;
       font-weight: 300;
@@ -137,35 +120,26 @@
       color: #fff;
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     }
-
-    /* --- Единый медиа-блок --- */
     .minimal-media {
       margin: 20px 0;
       width: 100%;
       touch-action: pan-y pinch-zoom;
     }
-
     .media-player {
       display: none;
     }
-
     .media-player.active {
       display: block;
     }
-
     .media-player iframe {
       width: 100%;
       border: none;
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
-
-    /* Яндекс.Музыка */
     #player-yandex iframe {
       height: 244px;
     }
-
-    /* YouTube (видео) */
     .video-wrapper {
       position: relative;
       width: 100%;
@@ -174,7 +148,6 @@
       overflow: hidden;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
-
     .video-wrapper iframe {
       position: absolute;
       top: 0;
@@ -182,15 +155,12 @@
       width: 100%;
       height: 100%;
     }
-
-    /* Две точки навигации */
     .media-switch {
       display: flex;
       justify-content: center;
       gap: 25px;
       margin-top: 25px;
     }
-
     .switch-dot {
       width: 14px;
       height: 14px;
@@ -203,7 +173,6 @@
       background-clip: content-box;
       position: relative;
     }
-
     .switch-dot:hover::after {
       content: attr(data-tooltip);
       position: absolute;
@@ -222,55 +191,44 @@
       pointer-events: none;
       z-index: 10;
     }
-
     .switch-dot.active {
       background: #ff4da6;
       box-shadow: 0 0 12px #ff4da6;
       transform: scale(1.2);
     }
-
-    /* --- Мобильные улучшения --- */
     @media (max-width: 600px) {
       .main {
         padding: 10px;
       }
-
       .card {
         padding: 30px 16px;
         border-radius: 24px;
       }
-
       h1 {
         font-size: 24px;
         margin-bottom: 16px;
       }
-
       p {
         font-size: 15px;
         margin-bottom: 30px;
         line-height: 1.5;
       }
-
       .timer {
         font-size: 24px;
       }
-
       #player-yandex iframe {
         height: 160px;
       }
-
       .glow {
         width: 250px;
         height: 250px;
         opacity: 0.12;
       }
-
       .switch-dot {
         width: 18px;
         height: 18px;
         padding: 10px;
       }
-
       .switch-dot:hover::after {
         display: none;
       }
@@ -285,20 +243,22 @@
   <div class="glow"></div>
 
   <div class="card">
+    <!-- 1. Заголовок -->
     <h1 class="fade">С 8 Марта, моя прекрасная 🌷</h1>
 
-    <p class="fade delay1">
-      Пусть этот день подарит тебе море улыбок и счастья.<br>
-      Ты — самое светлое, что есть в моей жизни.
-    </p>
-
-    <!-- Таймер с 18 февраля 2021 -->
-    <div class="timer-container fade delay2">
+    <!-- 2. Таймер "Мы знакомы уже" -->
+    <div class="timer-container fade delay1">
       <div class="timer-label">Мы знакомы уже:</div>
       <div class="timer" id="timer">0 дней 00:00:00</div>
     </div>
 
-    <!-- Единый медиа-блок: Яндекс.Музыка и YouTube -->
+    <!-- 3. Текст поздравления -->
+    <p class="fade delay2">
+      Пусть этот день подарит тебе море улыбок и счастья.<br>
+      Ты — самое светлое, что есть в моей жизни.
+    </p>
+
+    <!-- 4. Медиа-блок (Яндекс.Музыка и YouTube) -->
     <div class="minimal-media fade delay3" id="swipe-container">
       <!-- Яндекс.Музыка (активна по умолчанию) -->
       <div class="media-player active" id="player-yandex">
@@ -415,7 +375,7 @@
 
     // --- Таймер ---
     function updateTimer() {
-      const startDate = new Date(2021, 1, 18); // 18 февраля 2021 (месяцы с 0)
+      const startDate = new Date(2021, 1, 18); // 18 февраля 2021
       const now = new Date();
       const diff = now - startDate;
 

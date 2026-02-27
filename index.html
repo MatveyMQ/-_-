@@ -37,6 +37,7 @@
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
+    /* Звезды — теперь статичные белые точки */
     .stars {
       position: fixed;
       top: 0;
@@ -49,25 +50,15 @@
 
     .star {
       position: absolute;
-      opacity: 0;
-      animation: twinkle linear infinite;
+      background: white;
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+      opacity: 0.8;
       pointer-events: none;
       z-index: 1;
     }
 
-    .star svg {
-      width: 100%;
-      height: 100%;
-      fill: white;
-      filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.5));
-    }
-
-    @keyframes twinkle {
-      0% { opacity: 0; transform: scale(0.8); }
-      50% { opacity: 0.9; transform: scale(1.1); }
-      100% { opacity: 0; transform: scale(0.8); }
-    }
-
+    /* Свечение — центрировано */
     .glow {
       position: absolute;
       top: 50%;
@@ -192,7 +183,7 @@
       border: none;
     }
 
-    /* Fallback для мобильных — только кнопка, без текста и без фона */
+    /* Fallback для мобильных — только кнопка */
     .yandex-fallback {
       display: none;
       width: 100%;
@@ -296,6 +287,7 @@
       z-index: 10;
     }
 
+    /* Адаптация для мобильных */
     @media (max-width: 700px) {
       .card {
         padding: 40px 30px;
@@ -332,7 +324,7 @@
         display: none;
       }
       .stars {
-        display: none;
+        display: none; /* скрываем звезды на мобильных */
       }
     }
 
@@ -406,7 +398,7 @@
         </div>
       </div>
 
-      <!-- Точки навигации (только клик) -->
+      <!-- Точки навигации -->
       <div class="media-switch">
         <span class="switch-dot" data-media="yandex" data-tooltip="Яндекс.Музыка"></span>
         <span class="switch-dot" data-media="youtube" data-tooltip="YouTube"></span>
@@ -419,17 +411,18 @@
 (function() {
   "use strict";
 
-  /* ---------- Звезды (только для десктопа) ---------- */
+  /* ---------- Звезды (только для десктопа, статичные) ---------- */
   function generateStars() {
     const starsContainer = document.querySelector('.stars');
     const card = document.querySelector('.card');
     if (!starsContainer || !card) return;
 
+    // Звезды только на десктопе (ширина > 600px)
     if (window.innerWidth <= 600) return;
 
     starsContainer.innerHTML = '';
 
-    const starCount = 15;
+    const starCount = 25; // чуть больше для красоты
     const rect = card.getBoundingClientRect();
 
     function isInsideCard(xPercent, yPercent) {
@@ -445,7 +438,7 @@
 
     let created = 0;
     let attempts = 0;
-    const maxAttempts = 300;
+    const maxAttempts = 500;
 
     while (created < starCount && attempts < maxAttempts) {
       attempts++;
@@ -457,11 +450,10 @@
       star.className = 'star';
       star.style.left = x + '%';
       star.style.top = y + '%';
-      const size = Math.random() * 4 + 2;
+      // случайный размер
+      const size = Math.random() * 4 + 2; // от 2 до 6 пикселей
       star.style.width = size + 'px';
       star.style.height = size + 'px';
-      const opacity = Math.random() * 0.5 + 0.3;
-      star.style.opacity = opacity;
       starsContainer.appendChild(star);
       created++;
     }

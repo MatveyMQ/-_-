@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="color-scheme" content="dark only">
-  <title>С 8 Марта 🌷</title>
+  <title>Даша, с 8 Марта 🌷</title>
   <link rel="preconnect" href="https://music.yandex.ru">
   <link rel="preconnect" href="https://youtube.com">
   <style>
@@ -54,9 +54,18 @@
       background: white;
       border-radius: 50%;
       box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
-      opacity: 0.8;
+      opacity: 0;
+      animation: starTwinkle 3s infinite ease-in-out;
       pointer-events: none;
       z-index: 1;
+    }
+
+    @keyframes starTwinkle {
+      0%, 100% { opacity: 0; transform: scale(0); }
+      10% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+      90% { opacity: 0.8; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0); }
     }
 
     .glow {
@@ -103,7 +112,7 @@
     }
 
     h1, p, .timer-container, .minimal-media {
-      opacity: 0; /* изначально скрыты */
+      opacity: 0;
       transition: opacity 1.5s ease;
     }
 
@@ -121,8 +130,12 @@
     p {
       font-size: 18px;
       line-height: 1.6;
-      margin-bottom: 50px;
+      margin-bottom: 20px;
       word-break: break-word;
+    }
+
+    p:last-of-type {
+      margin-bottom: 50px;
     }
 
     .timer-container {
@@ -280,6 +293,9 @@
       .yandex-fallback {
         display: block;
       }
+      .stars {
+        display: none;
+      }
     }
 
     @media (min-width: 601px) {
@@ -310,7 +326,7 @@
       }
       p {
         font-size: 15px;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
         line-height: 1.5;
       }
       .timer {
@@ -321,9 +337,6 @@
         height: 32px;
       }
       .switch-dot:hover::after {
-        display: none;
-      }
-      .stars {
         display: none;
       }
     }
@@ -342,6 +355,18 @@
         font-size: 18px;
       }
     }
+
+    .quote {
+      display: inline-block;
+      border-left: 4px solid #ff99cc;
+      padding-left: 16px;
+      margin: 4px 0;
+      color: #ffffff;
+      font-style: italic;
+      line-height: 1.5;
+      text-align: left;
+      background: transparent;
+    }
   </style>
 </head>
 <body>
@@ -352,17 +377,27 @@
   <div class="glow"></div>
 
   <div class="card">
-    <h1 id="mainTitle">С 8 Марта, моя прекрасная 🌷</h1>
+    <h1 id="mainTitle">Даша, с 8 Марта! 🌷</h1>
+
     <div class="timer-container" id="timer-block">
       <div class="timer-label">Мы знакомы уже:</div>
       <div class="timer" id="timer">0 дней 00:00:00</div>
     </div>
-    <p id="mainParagraph">Пусть этот день подарит тебе море улыбок и счастья.<br>
-Ты — самое светлое, что есть в моей жизни.<br>
-Каждое утро я просыпаюсь и думаю о тебе. Твой смех звучит для меня как самая красивая мелодия. Твои глаза сияют ярче всех звёзд на этом небе. Я благодарен судьбе за каждый миг, проведённый рядом с тобой.<br>
-Ты делаешь этот мир лучше просто тем, что существуешь. В твоём сердце столько тепла и доброты, что им можно согреть всю планету. Ты — вдохновение, моя муза, моя опора и моя самая большая радость.<br>
-Желаю тебе бесконечного счастья, крепкого здоровья, исполнения самых заветных желаний. Пусть каждый день приносит только приятные сюрпризы, пусть окружают только искренние люди, а в душе всегда цветёт весна. Ты заслуживаешь самого лучшего в этом мире, и я сделаю всё, чтобы ты это чувствовала каждый день.<br>
-Спасибо тебе за твою улыбку, за твои объятия, за то, что ты просто есть. С 8 Марта, моя любимая! 🌷🌷🌷</p>
+
+    <p id="p1">Как ты можешь видеть, знакомы мы уже давно, и сегодня впервые я поздравляю тебя не просто словами, но и подарком. За это время всякое было — может, мы и не проходили вместе через серьёзные испытания, но та самая «пытка парами у Кораблёвой» чего только стоила! И знаешь, даже в ней было что-то хорошее: когда мы общались, эти пары переставали быть утомительными и становились даже весёлыми. Наше общение всегда получалось лёгким и живым.</p>
+
+    <p id="p2">Мы не раз переставали общаться надолго, но каждый разговор, каждая минута почему-то оставались в памяти.</p>
+
+    <p id="p3">Помнишь, как ты мне написала тогда: <span class="quote">«Матвей, ты довольно адекватный и интересный человек (а на первый взгляд и не скажешь), но я примерно представляю, с каким мотивом ты мне написал, поэтому, извини, но у меня есть парень»</span> В тот момент всё действительно могло закончиться, так и не начавшись. Но не закончилось — и я этому очень рад.</p>
+
+    <p id="p4">Знаешь, тот день, когда мы сначала встретились в кафешке, а потом поехали смотреть кино и просто пить, стал для меня по-настоящему переломным. Это был глоток свежего воздуха после долгого сидения дома — с него всё как-то и завертелось, появилось желание снова общаться с людьми, выходить куда-то, жить иначе. За это я тебе невероятно благодарен. Кстати, я так и не оплатил тебе тот подарок... Видимо, пришло время. ( ◡‿◡ *)</p>
+
+    <p id="p5">Ты многого заслуживаешь — спокойствия, уверенности, роста. Пусть карьера идёт вверх, пусть рядом будут люди, которые понимают и ценят тебя. И пусть 8 марта будет не просто датой в календаре, а днём, который действительно для тебя.</p>
+
+    <p id="p6">Я вообще не мастер красиво изъясняться, не умею использовать слова так, как это делают настоящие писатели. Но в моём подарке есть книги, а уж в них люди точно знают своё дело — пусть они скажут то, что я не всегда умею выразить. Но одно я скажу прямо: ты повлияла на мою жизнь больше, чем, ты думаешь. Хотя, наверное, одним пожеланием это не должно закончиться. (¬‿¬ )</p>
+
+    <p id="p7">В моей жизни очень много значит музыка — и весёлые моменты, и грустные я всегда переживаю с ней. И мне правда хочется, чтобы одна песня, пусть хоть чуточку, ассоциировалась со мной. Ты можешь послушать её прямо сейчас или оставить на потом, но мне почему-то кажется, что она и так тебе знакома.</p>
+
     <div class="minimal-media" id="media-block">
       <div class="media-player" id="player-yandex">
         <div class="yandex-container">
@@ -403,40 +438,48 @@
 (function() {
   "use strict";
 
-  function generateStars() {
+  // ⭐ Оптимизированная генерация анимированных звёзд
+  function createAnimatedStars() {
     const starsContainer = document.querySelector('.stars');
     const card = document.querySelector('.card');
-    if (!starsContainer || !card) return;
-    if (window.innerWidth <= 600) return;
+    if (!starsContainer || !card || window.innerWidth <= 600) return;
+
     starsContainer.innerHTML = '';
-    const starCount = 25;
+    const starCount = 35; // Больше звёзд для эффекта
     const rect = card.getBoundingClientRect();
-    function isInsideCard(xPercent, yPercent) {
-      const x = (xPercent / 100) * window.innerWidth;
-      const y = (yPercent / 100) * window.innerHeight;
-      return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-    }
-    let created = 0;
-    let attempts = 0;
-    const maxAttempts = 500;
-    while (created < starCount && attempts < maxAttempts) {
-      attempts++;
-      const x = Math.random() * 100;
-      const y = Math.random() * 100;
-      if (isInsideCard(x, y)) continue;
+    
+    for (let i = 0; i < starCount; i++) {
+      let attempts = 0;
+      let x, y;
+      
+      // Находим позицию вне карточки
+      do {
+        x = Math.random() * 100;
+        y = Math.random() * 100;
+        attempts++;
+      } while (attempts < 200 && isInsideCard(x, y, rect));
+      
       const star = document.createElement('div');
       star.className = 'star';
       star.style.left = x + '%';
       star.style.top = y + '%';
-      const size = Math.random() * 4 + 2;
-      star.style.width = size + 'px';
-      star.style.height = size + 'px';
+      star.style.width = star.style.height = (Math.random() * 3 + 1.5) + 'px';
+      
+      // Разная задержка и длительность для каждой звезды
+      star.style.animationDelay = Math.random() * 3 + 's';
+      star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+      
       starsContainer.appendChild(star);
-      created++;
     }
   }
-  window.addEventListener('load', generateStars);
 
+  function isInsideCard(xPercent, yPercent, rect) {
+    const x = (xPercent / 100) * window.innerWidth;
+    const y = (yPercent / 100) * window.innerHeight;
+    return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+  }
+
+  // Остальной код без изменений (оптимизирован)
   function plural(n, one, two, five) {
     n = Math.abs(n) % 100;
     const n1 = n % 10;
@@ -467,7 +510,7 @@
   }
 
   function updateTimer() {
-    const startDate = new Date(2021, 1, 18);
+    const startDate = new Date(2021, 1, 11);
     const now = new Date();
     const diff = dateDiff(startDate, now);
     const parts = [];
@@ -481,18 +524,14 @@
     if (timer) timer.textContent = parts.join(' ');
   }
 
+  // Секвенс появления контента
   const titleEl = document.getElementById('mainTitle');
   const timerBlock = document.getElementById('timer-block');
-  const paragraphEl = document.getElementById('mainParagraph');
+  const paragraphs = document.querySelectorAll('[id^="p"]');
   const mediaBlock = document.getElementById('media-block');
 
   function startSequence() {
-    // 1. Заголовок
-    setTimeout(() => {
-      titleEl.classList.add('visible');
-    }, 200); // небольшая задержка перед первым появлением
-
-    // 2. Таймер через 1.2 секунды
+    setTimeout(() => titleEl.classList.add('visible'), 200);
     setTimeout(() => {
       timerBlock.classList.add('visible');
       if (!window.timerInterval) {
@@ -500,19 +539,14 @@
         window.timerInterval = setInterval(updateTimer, 1000);
       }
     }, 1200);
-
-    // 3. Параграф через 2.4 секунды
-    setTimeout(() => {
-      paragraphEl.classList.add('visible');
-    }, 2400);
-
-    // 4. Медиа-блок через 3.6 секунды
+    setTimeout(() => paragraphs.forEach(p => p.classList.add('visible')), 2400);
     setTimeout(() => {
       mediaBlock.classList.add('visible');
       activateMedia('yandex');
     }, 3600);
   }
 
+  // Переключатель медиа
   const dots = document.querySelectorAll('.switch-dot');
   const players = {
     yandex: document.getElementById('player-yandex'),
@@ -542,7 +576,14 @@
     });
   }
 
-  window.addEventListener('load', startSequence);
+  // Инициализация
+  window.addEventListener('load', () => {
+    createAnimatedStars();
+    startSequence();
+  });
+
+  // Пересоздание звёзд при ресайзе
+  window.addEventListener('resize', createAnimatedStars);
 })();
 </script>
 </body>
